@@ -24,7 +24,7 @@ public class UI {
     private GameBoard gameBoard;  // Reference to GameBoard class
     private JRadioButton sButton, oButton;  // Radio buttons for blue player
     private JRadioButton sButton2, oButton2;  // Radio buttons for red player
-    private JLabel boardSizeLabel;  // Display the board size
+    JLabel boardSizeLabel;  // Display the board size
     private GameController gameController;  // Game controller instance
     private JPanel boardPanel;  // Panel holding the game board
     private JRadioButton simpleGameButton, generalGameButton;  // Game mode buttons
@@ -189,4 +189,46 @@ public class UI {
         }
     }
     
+
+
+//getters for testing
+public JLabel getBoardSizeLabel() {
+    return boardSizeLabel;
+}
+
+public JRadioButton getSimpleGameButton() {
+    return simpleGameButton;
+}
+
+public JRadioButton getGeneralGameButton() {
+    return generalGameButton;
+}
+
+public GameBoard getGameBoard() {
+    return gameBoard;
+}
+
+
+public GameController getGameController() {
+    return gameController;
+}
+
+public JRadioButton getSButton() {
+    return sButton;
+}
+
+public JRadioButton getOButton() {
+    return oButton;
+}
+
+
+public JRadioButton getSButton2() {
+    return sButton2;
+}
+
+public JRadioButton getOButton2() {
+    return oButton2;
+}
+
+
 }
