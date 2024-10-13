@@ -33,6 +33,7 @@ public void togglePlayerTurn() {
 public char getCurrentPlayerChoice() {
     return isPlayerOneTurn ? playerOneChoice : playerTwoChoice;
 }
+
 public boolean isPlayerOneTurn() {
     return isPlayerOneTurn;
 }
