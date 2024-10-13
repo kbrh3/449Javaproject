@@ -26,15 +26,29 @@ public class UITest {
         simpleGameButton = ui.getSimpleGameButton();
         generalGameButton = ui.getGeneralGameButton();
     }
-    
     @Test
-    public void testUpdateGameMode2GeneralGame() {
+    public void testGameModeSelection() {
+    ui.getSimpleGameButton().doClick();  // Select Simple Game
+    assertTrue(ui.getSimpleGameButton().isSelected(), "Simple Game should be selected");
+    
+    ui.getGeneralGameButton().doClick();  // Select General Game
+    assertTrue(ui.getGeneralGameButton().isSelected(), "General Game should be selected");
+}
+
+    @Test
+    public void testUpdateGameModeToGeneralGame() {
         //Simulate clicking the General Game button
         ui.getGeneralGameButton().doClick();
     
         //Verify that the game board size is changed to 10x10
         assertEquals(10, ui.getGameBoard().getSize(), "Board size should be 10x10");
     }
+
+    @Test
+    public void testUpdateGameModeToSimpleGame() {
+    ui.getSimpleGameButton().doClick();  // Simulate clicking the Simple Game button
+    assertEquals(8, ui.getGameBoard().getSize(), "Board size should be 8x8");
+}
     
     @Test
     public void testPlayer1ChoiceUpdate() {
@@ -59,4 +73,16 @@ public class UITest {
         assertEquals('O', ui.getGameController().getPlayerTwoChoice(),
                 "Player Two's choice should be 'O'");
     }
+    
+    @Test
+    public void testNewGameInitialization() {
+    ui.updateGameMode(8, "Simple Game");
+    assertEquals(8, ui.getGameBoard().getSize(), "Board size should be 8 after initialization");
+
+    ui.updateGameMode(10, "General Game");
+    assertEquals(10, ui.getGameBoard().getSize(), "Board size should be 10 after initialization");
+}
+
+
+
 }    

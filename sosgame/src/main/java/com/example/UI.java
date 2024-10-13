@@ -83,7 +83,7 @@ public class UI {
         frame.add(topPanel, BorderLayout.NORTH);
     }
 
-    private void updateGameMode(int size, String mode) {
+    void updateGameMode(int size, String mode) { //made package-private for testing
         // Update the game board and controller with the new size
         frame.remove(boardPanel);  // Remove the old board
         gameBoard = new GameBoard(size);
@@ -220,6 +220,7 @@ public JRadioButton getSButton() {
 public JRadioButton getOButton() {
     return oButton;
 }
+
 
 
 public JRadioButton getSButton2() {
