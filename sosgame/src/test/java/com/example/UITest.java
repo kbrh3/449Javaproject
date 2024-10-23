@@ -1,7 +1,7 @@
 package com.example;
 
-import static org.junit.jupiter.api.Assertions.*;  // Assertions
-import static org.mockito.Mockito.*;  // Mockito for mocks
+import static org.junit.jupiter.api.Assertions.*;  
+import static org.mockito.Mockito.*;  // Mockito for ui
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
