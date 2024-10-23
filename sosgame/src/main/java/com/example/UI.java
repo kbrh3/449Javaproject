@@ -31,7 +31,7 @@ public class UI {
     private JPanel gameModePanel;  //Panel for game mode selection
 
     public UI() {
-        gameController = new GameController(8);  //Init the game controller w/ size 8x8
+        gameController = new GameController(new SimpleGame(8));  //Init the game controller w/ size 8x8
         gameBoard = new GameBoard(8);  //Init the game board w/ size 8x8
         initUI();  //Init user interface
     }
@@ -90,8 +90,14 @@ public class UI {
         
         //below to board panels from piling up 10/15/24
         frame.remove(boardPanel);  //Remove the old board
+        //if function, for selection of general vs simple??
         gameBoard = new GameBoard(size);
-        gameController = new GameController(size);
+        if (mode.equals("Simple Game")) {
+            gameController = new GameController(new SimpleGame(8));
+        } else if (mode.equals("General Game")) {
+            gameController = new GameController(new GeneralGame(10));
+        }
+    
     
         //Update the board size label w/ new mode & size
         boardSizeLabel.setText(mode + " - Board Size: " + size + "x" + size);
@@ -181,7 +187,7 @@ public class UI {
         boolean isPlayerOneTurn = gameController.isPlayerOneTurn();  //Check current turn
         char currentPlayer = gameController.getCurrentPlayerChoice();  //Get s or o
     
-        if (gameController.makeMove(row, col)) {  //If the move valid
+        if (gameController.makeMove(row, col, currentPlayer)) {  //If the move valid
             cell.setText(String.valueOf(currentPlayer));  //Display the player choice
     
             //Set the color based on player

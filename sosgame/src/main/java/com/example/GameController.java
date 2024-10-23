@@ -1,12 +1,17 @@
 package com.example;
 //manage logic and state
 public class GameController {
+    private GameMode currentGameMode;  // Use a common interface like GameMode
     private GameBoard gameBoard;
     private boolean isPlayerOneTurn = true; //Assuming Player One starts with 'S'
     private char playerOneChoice = 'S';  //Default choice
     private char playerTwoChoice = 'S';  //Default choice
-    public GameController(int size) {
-        this.gameBoard = new GameBoard(size);
+    public GameController(GeneralGame ggame) {
+        this.gameBoard = ggame.getGameBoard(); //gameboard from general game
+    }
+
+    public GameController(SimpleGame sgame) {
+        this.gameBoard = sgame.getGameBoard();  //get gameboard from SimpleGame
     }
 //set player one choice
 public void setPlayerOneChoice(char choice) {
@@ -25,10 +30,6 @@ public char getPlayerTwoChoice() {
     return playerTwoChoice;
 }
 
-public void togglePlayerTurn() {
-    isPlayerOneTurn = !isPlayerOneTurn;
-}
-
 //get the current player choice
 public char getCurrentPlayerChoice() {
     return isPlayerOneTurn ? playerOneChoice : playerTwoChoice;
@@ -37,17 +38,13 @@ public char getCurrentPlayerChoice() {
 public boolean isPlayerOneTurn() {
     return isPlayerOneTurn;
 }
-
-public boolean makeMove(int x, int y) {
-    char currentPlayerChar = getCurrentPlayerChoice(); //Get the choice b4 toggling turn
-    if (gameBoard.setMove(x, y, currentPlayerChar)) {
-        togglePlayerTurn(); //Toggle turn after setting move
-        return true;
-    }
-    return false;
-}
    
 public GameBoard getGameBoard() {
         return this.gameBoard;
     }
+
+
+public boolean makeMove(int row, int col, char player) {
+    return currentGameMode.makeMove(row, col, player); } // Delegate to the specific game mode
+
 }
