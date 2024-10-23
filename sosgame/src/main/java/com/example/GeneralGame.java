@@ -29,8 +29,8 @@ public class GeneralGame implements GameMode{
     }
 
     @Override
-    public boolean makeMove(int row, int col, char letter) {
-        if (gameBoard.setMove(row, col, letter)) {
+    public boolean makeMove(int row, int col, char letter, char player) {
+        if (gameBoard.setMove(row, col, letter, player)) {
             // Check for SOS; if formed, award points
             if (gameBoard.checkSOS(row, col)) {
                 if (isPlayerOneTurn) {

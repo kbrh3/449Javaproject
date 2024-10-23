@@ -185,10 +185,14 @@ public class UI {
    
     private void handleMove(int row, int col, JLabel cell) {
         boolean isPlayerOneTurn = gameController.isPlayerOneTurn();  //Check current turn
-        char currentPlayer = gameController.getCurrentPlayerChoice();  //Get s or o
-    
-        if (gameController.makeMove(row, col, currentPlayer)) {  //If the move valid
-            cell.setText(String.valueOf(currentPlayer));  //Display the player choice
+        char letter = gameController.getCurrentPlayerChoice();  //Get s or o
+        char player;
+        //maybe come up with a cleaner way to determine player
+        if (isPlayerOneTurn == true) player = 1;
+        else player = 2;
+
+        if (gameController.makeMove(row, col, letter, player)) {  //If the move valid
+            cell.setText(String.valueOf(letter));  //Display the player choice
     
             //Set the color based on player
             if (isPlayerOneTurn) {

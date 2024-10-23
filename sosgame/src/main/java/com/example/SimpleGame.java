@@ -14,8 +14,8 @@ public class SimpleGame implements GameMode {
     }
 
     @Override
-    public boolean makeMove(int row, int col, char letter) {
-        if (gameBoard.setMove(row, col, letter)) {
+    public boolean makeMove(int row, int col, char letter, char player) {
+        if (gameBoard.setMove(row, col, letter, player)) {
             togglePlayerTurn();
             return true;
         }

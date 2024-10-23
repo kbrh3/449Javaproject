@@ -3,15 +3,17 @@ package com.example;
 public class GameController {
     private GameMode currentGameMode;  // Use a common interface like GameMode
     private GameBoard gameBoard;
-    private boolean isPlayerOneTurn = true; //Assuming Player One starts with 'S'
+    //private boolean isPlayerOneTurn = true; //Assuming Player One starts with 'S'
     private char playerOneChoice = 'S';  //Default choice
     private char playerTwoChoice = 'S';  //Default choice
     public GameController(GeneralGame ggame) {
         this.gameBoard = ggame.getGameBoard(); //gameboard from general game
+        this.currentGameMode = ggame;
     }
 
     public GameController(SimpleGame sgame) {
         this.gameBoard = sgame.getGameBoard();  //get gameboard from SimpleGame
+        this.currentGameMode = sgame;
     }
 //set player one choice
 public void setPlayerOneChoice(char choice) {
@@ -32,19 +34,21 @@ public char getPlayerTwoChoice() {
 
 //get the current player choice
 public char getCurrentPlayerChoice() {
-    return isPlayerOneTurn ? playerOneChoice : playerTwoChoice;
+    return currentGameMode.getCurrentPlayerChoice(); 
 }
 
 public boolean isPlayerOneTurn() {
-    return isPlayerOneTurn;
+    return currentGameMode.isPlayerOneTurn();  
 }
    
 public GameBoard getGameBoard() {
         return this.gameBoard;
     }
-
-
-public boolean makeMove(int row, int col, char player) {
-    return currentGameMode.makeMove(row, col, player); } // Delegate to the specific game mode
+    
+    //logic here is a bit off, make sure this isn't causing problems
+public boolean makeMove(int row, int col, char choice, char player) {
+        choice = getCurrentPlayerChoice(); 
+        return currentGameMode.makeMove(row, col, choice, player);  
+    }
 
 }
