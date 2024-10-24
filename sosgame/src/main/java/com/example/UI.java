@@ -3,8 +3,6 @@ package com.example;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-//import java.awt.event.ActionListener;
-//import java.awt.event.ActionEvent;
 import java.awt.Dimension;
 import java.awt.Color;
 
@@ -14,7 +12,6 @@ import javax.swing.JOptionPane;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
-//import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -127,8 +124,8 @@ public class UI {
         playerPanel.add(sButton);
         playerPanel.add(oButton);
 
-        sButton.addActionListener(e -> gameController.setPlayerOneChoice('S'));
-        oButton.addActionListener(e -> gameController.setPlayerOneChoice('O'));
+        sButton.addActionListener(e -> currentGameMode.setPlayer1Choice('S'));
+        oButton.addActionListener(e -> currentGameMode.setPlayer1Choice('O'));
 
         playerPanel.setPreferredSize(new Dimension(200, frame.getHeight()));  //Set panel size
         frame.add(playerPanel, BorderLayout.WEST);  //Add player panel to the frame
@@ -149,8 +146,8 @@ public class UI {
         playerPanel.add(sButton2);
         playerPanel.add(oButton2);
 
-        sButton2.addActionListener(e -> gameController.setPlayerTwoChoice('S'));
-        oButton2.addActionListener(e -> gameController.setPlayerTwoChoice('O'));
+        sButton2.addActionListener(e -> currentGameMode.setPlayer2Choice('S'));
+        oButton2.addActionListener(e -> currentGameMode.setPlayer2Choice('O'));
 
         playerPanel.setPreferredSize(new Dimension(200, frame.getHeight()));  //Set panel size
         frame.add(playerPanel, BorderLayout.EAST);  //Add player panel to the frame
@@ -194,16 +191,13 @@ public class UI {
         if (gameController.makeMove(row, col, letter, player)) {  //If the move valid
             cell.setText(String.valueOf(letter));  //Display the player choice
     
-            //Set the color based on player
-            if (isPlayerOneTurn) {
-                cell.setForeground(Color.BLUE);  //Blue player
-            } else {
-                cell.setForeground(Color.RED);  //Red player
-            }
+            //Set color of letters
+            cell.setForeground(isPlayerOneTurn ? Color.BLUE : Color.RED);
 
-            // Check for game over - determine how this works with new game mode classes
+
+            //Check for game over - determine how this works with new game mode classes
         if (currentGameMode.checkGameOver(row, col)) {
-            String winner = currentGameMode.getWinner(row, col);
+            String winner = currentGameMode.getWinner();
             JOptionPane.showMessageDialog(frame, winner);
         }
         }
@@ -218,14 +212,14 @@ public class UI {
         return ' ';  // Default in case neither is selected (though this shouldn't happen)
     }
     
-    // Helper function to get the selected letter for Player 2
+    //Helper function to get the selected letter for Player 2
     private char getchoicePlayer2() {
         if (sButton2.isSelected()) {
             return 'S';
         } else if (oButton2.isSelected()) {
             return 'O';
         }
-        return ' ';  // Default in case neither is selected
+        return ' ';  //Default in case neither is selected
     }
 
 //getters for testing

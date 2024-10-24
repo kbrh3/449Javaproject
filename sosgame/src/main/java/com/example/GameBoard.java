@@ -25,11 +25,11 @@ public class GameBoard {
         initializeBoard();
     }
     //this may have a version in controller, make sure we are using the right one
-    //Place a move and track the player who made it ('B' for blue, 'R' for red)
+    //Place a move and track the player who made it ('B' for blue, 'R' for red) - not done yet, may not need
     public boolean setMove(int row, int col, char letter, char player) {
         if (grid[row][col] == ' ' && moves[row][col] == ' ') {
             grid[row][col] = letter;
-            moves[row][col] = player;  //Track players move
+            moves[row][col] = player;  //Track players move - may not need, check back on this later
             return true;
         }
         return false;  //invalid move, spot already taken
@@ -48,15 +48,24 @@ public class GameBoard {
             int checkRow = dir[0];
             int checkCol = dir[1];
 
-            if (grid[row + checkRow][col + checkCol] == 'O' &&
-                grid[row + 2 * checkRow][col + 2 * checkCol] == 'S' &&
-                moves[row + checkRow][col + checkCol] == player &&
-                moves[row + 2 * checkRow][col + 2 * checkCol] == player) {
-                return true;  // SOS found!
+            //Check boundaries before accessing
+        if (validBoundary(row + checkRow, col + checkCol) && 
+        validBoundary(row + 2 * checkRow, col + 2 * checkCol)) {
+        //Check for the sos pattern
+        if (grid[row + checkRow][col + checkCol] == 'O' &&
+            grid[row + 2 * checkRow][col + 2 * checkCol] == 'S' &&
+            moves[row + checkRow][col + checkCol] == player &&
+            moves[row + 2 * checkRow][col + 2 * checkCol] == player) {
+            return true;  //if sos found
             }
         }
+    }
 
-        return false;  // No valid SOS found
+        return false;  //No sos found
+    }
+    private boolean validBoundary(int row, int col) {
+        //check the row and col are in bounds of the grid
+        return row >= 0 && row < size && col >= 0 && col < size;
     }
 
     //Method to initialize / reset the board

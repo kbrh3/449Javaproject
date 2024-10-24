@@ -7,7 +7,9 @@ package com.example;
 public class SimpleGame implements GameMode {
     private GameBoard gameBoard;
     private boolean isPlayerOneTurn = true;
-    private int size;
+    private char player1Choice = 'S';  //Default choice
+    private char player2Choice = 'S';  //Default choice
+    private int size; //this is used, don't know why it is mad
 
     public SimpleGame(int size) {
         this.gameBoard = new GameBoard(size);
@@ -26,19 +28,12 @@ public class SimpleGame implements GameMode {
         }
         return false;  //invalid move
     }
-
-    //determines winner or if draw
-    public String getWinner(int row, int col) {
-        if (gameBoard.checkSOS(row, col)) {
-            //the turn was toggled, the last move was by the other player
-            return !isPlayerOneTurn ? "Player 1 wins!" : "Player 2 wins!";
-        }
-        //no sos and the board is full- draw
-        if (gameBoard.isFull()) {
-            return "It's a draw!";
-        }
-        // No winner yet - for edge cases/called early
-        return "";
+    @Override //worked as of 10/23/24
+    public String getWinner() {
+    if (gameBoard.isFull()) {
+        return "It's a draw!";
+    }
+    return !isPlayerOneTurn ? "Red Player Wins!" : "Blue Player Wins!";
     }
 
     @Override
@@ -47,10 +42,10 @@ public class SimpleGame implements GameMode {
     }
 
     //something might be weird here - check this during testing
+    //was backwards, fixed 10/23/24
     @Override
     public char getCurrentPlayerChoice() {
-        //return isPlayerOneTurn ? 'S' : 'O';  // 'S' for Player 1, 'O' for Player 2
-        return ' '; 
+        return isPlayerOneTurn ? player1Choice : player2Choice;   
     }
 
     @Override
@@ -65,5 +60,21 @@ public class SimpleGame implements GameMode {
 
     public GameBoard getGameBoard() {
         return this.gameBoard;
+    }
+    //set player one choice
+    public void setPlayer1Choice(char choice) {
+        this.player1Choice = choice;
+    }
+    //get player one choice
+    public char getPlayer1Choice() {
+        return player1Choice;
+    }
+    //set player two choice
+    public void setPlayer2Choice(char choice) {
+        this.player2Choice = choice;
+    }
+    //get player two choice
+    public char getPlayer2Choice() {
+         return player2Choice;
     }
 }

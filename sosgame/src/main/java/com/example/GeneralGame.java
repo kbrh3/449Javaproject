@@ -12,6 +12,8 @@ public class GeneralGame implements GameMode{
     private boolean isPlayerOneTurn = true;
     private int player1points = 0;
     private int player2points = 0;
+    private char player1Choice = 'S';  //Default choice
+    private char player2Choice = 'S';  //Default choice
     int size = 10;
 
     public GeneralGame(int size) {
@@ -25,27 +27,24 @@ public class GeneralGame implements GameMode{
 
     @Override
     public char getCurrentPlayerChoice() {
-       // return isPlayerOneTurn ? 'S' : 'O';  // Return 'S' or 'O' depending on whose turn it is
-       return ' '; 
+        return isPlayerOneTurn ? player1Choice : player2Choice;  
     }
 
     @Override
     public boolean makeMove(int row, int col, char letter, char player) {
         if (gameBoard.setMove(row, col, letter, player)) {
-            //Check for SOS - award points
             if (gameBoard.checkSOS(row, col)) {
                 if (isPlayerOneTurn) {
                     player1points++;
                 } else {
                     player2points++;
                 }
-                //player gets another turn if SOS is formed
-                return true;
+                return true;  //Player gets another turn
             }
-            togglePlayerTurn();
+            togglePlayerTurn();  // no sos toggle turn
             return true;
         }
-        return false;
+        return false;  //invalid move
     }
     //dont really need row or column, but makes it simpler for gameMode.java
     public boolean checkGameOver(int row, int col) {
@@ -72,4 +71,21 @@ public class GeneralGame implements GameMode{
     public GameBoard getGameBoard() {
         return this.gameBoard;
     }
+    //set player one choice
+    public void setPlayer1Choice(char choice) {
+    this.player1Choice = choice;
+    }
+    //get player one choice
+    public char getPlayer1Choice() {
+    return player1Choice;
+    }
+    //set player two choice
+    public void setPlayer2Choice(char choice) {
+    this.player2Choice = choice;
+    }
+    //get player two choice
+    public char getPlayer2Choice() {
+    return player2Choice;
+    }
 }
+
