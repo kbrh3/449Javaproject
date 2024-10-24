@@ -99,7 +99,7 @@ public class UI {
         }
     
     
-        //Update the board size label w/ new mode & size
+        //Update the board size label w/ new mode & size - maybe this should come from game mode??
         boardSizeLabel.setText(mode + " - Board Size: " + size + "x" + size);
     
         //Reinit the board
@@ -185,11 +185,9 @@ public class UI {
    
     private void handleMove(int row, int col, JLabel cell) {
         boolean isPlayerOneTurn = gameController.isPlayerOneTurn();  //Check current turn
-        char letter = gameController.getCurrentPlayerChoice();  //Get s or o
-        char player;
-        //maybe come up with a cleaner way to determine player
-        if (isPlayerOneTurn == true) player = 1;
-        else player = 2;
+        //char letter = gameController.getCurrentPlayerChoice();  //Get s or o - this was from before sprint 3
+        char letter = isPlayerOneTurn ? getSelectedLetterFromPlayerOne() : getSelectedLetterFromPlayerTwo();
+        char player = isPlayerOneTurn ? '1' : '2';  //to help keep track of points
 
         if (gameController.makeMove(row, col, letter, player)) {  //If the move valid
             cell.setText(String.valueOf(letter));  //Display the player choice
@@ -203,7 +201,24 @@ public class UI {
         }
     }
     
-
+    private char getSelectedLetterFromPlayerOne() {
+        if (sButton.isSelected()) {
+            return 'S';
+        } else if (oButton.isSelected()) {
+            return 'O';
+        }
+        return ' ';  // Default in case neither is selected (though this shouldn't happen)
+    }
+    
+    // Helper function to get the selected letter for Player 2
+    private char getSelectedLetterFromPlayerTwo() {
+        if (sButton2.isSelected()) {
+            return 'S';
+        } else if (oButton2.isSelected()) {
+            return 'O';
+        }
+        return ' ';  // Default in case neither is selected
+    }
 
 //getters for testing
 public JLabel getBoardSizeLabel() {

@@ -10,8 +10,8 @@ package com.example;
 public class GeneralGame implements GameMode{
     private GameBoard gameBoard;
     private boolean isPlayerOneTurn = true;
-    private int playerOneSOSCount = 0;
-    private int playerTwoSOSCount = 0;
+    private int player1points = 0;
+    private int player2points = 0;
     int size = 10;
 
     public GeneralGame(int size) {
@@ -25,20 +25,21 @@ public class GeneralGame implements GameMode{
 
     @Override
     public char getCurrentPlayerChoice() {
-        return isPlayerOneTurn ? 'S' : 'O';  // Return 'S' or 'O' depending on whose turn it is
+       // return isPlayerOneTurn ? 'S' : 'O';  // Return 'S' or 'O' depending on whose turn it is
+       return ' '; 
     }
 
     @Override
     public boolean makeMove(int row, int col, char letter, char player) {
         if (gameBoard.setMove(row, col, letter, player)) {
-            // Check for SOS; if formed, award points
+            //Check for SOS - award points
             if (gameBoard.checkSOS(row, col)) {
                 if (isPlayerOneTurn) {
-                    playerOneSOSCount++;
+                    player1points++;
                 } else {
-                    playerTwoSOSCount++;
+                    player2points++;
                 }
-                // In GeneralGame, the player gets another turn if SOS is formed
+                //player gets another turn if SOS is formed
                 return true;
             }
             togglePlayerTurn();
@@ -54,15 +55,16 @@ public class GeneralGame implements GameMode{
 
     public String getWinner() {
         // In GeneralGame, the player with the most SOSs wins
-        if (playerOneSOSCount > playerTwoSOSCount) {
+        if (player1points > player2points) {
             return "Player 1 wins!";
-        } else if (playerTwoSOSCount > playerOneSOSCount) {
+        } else if (player2points > player1points) {
             return "Player 2 wins!";
         } else {
             return "It's a draw!";
         }
     }
 
+    //toggle may be different here, not sure where that will be implimented
     private void togglePlayerTurn() {
         isPlayerOneTurn = !isPlayerOneTurn;
     }
