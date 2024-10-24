@@ -19,20 +19,20 @@ import javax.swing.JRadioButton;
 public class UI {
 
     private JFrame frame;
-    private GameBoard gameBoard;  //Reference GameBoard class
-    private GameMode currentGameMode;  //Use a common interface like GameMode
-    private JRadioButton sButton, oButton;  //Radio buttons for blue player
-    private JRadioButton sButton2, oButton2;  //Radio buttons for red player
-    JLabel boardSizeLabel;  //Display board size
-    private GameController gameController;  //Game controller instance
-    private JPanel boardPanel;  //Panel holding  game board
-    private JRadioButton simpleGameButton, generalGameButton;  //Game mode buttons
-    private JPanel gameModePanel;  //Panel for game mode selection
+    private GameBoard gameBoard;  
+    private GameMode currentGameMode;  
+    private JRadioButton sButton, oButton;  //radio buttons for blue player
+    private JRadioButton sButton2, oButton2;  //radio buttons for red player
+    JLabel boardSizeLabel;  //display board size
+    private GameController gameController;  
+    private JPanel boardPanel;  //panel holding game board
+    private JRadioButton simpleGameButton, generalGameButton;  //game mode buttons
+    private JPanel gameModePanel;  //panel for game mode selection
 
     public UI() {
         gameController = new GameController(new SimpleGame(8));  //Init the game controller w/ size 8x8
         gameBoard = new GameBoard(8);  //Init the game board w/ size 8x8
-        currentGameMode = gameController.getGameMode();
+        currentGameMode = gameController.getGameMode(); //defaulting to simple game :)
         initUI();  //Init user interface
     }
 
@@ -40,7 +40,7 @@ public class UI {
     frame = new JFrame("SOS Game");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setSize(800, 400);  //Set frame size - bigger 10/17/24
-    frame.setLayout(new BorderLayout(10, 10));  //Add some spacing between components
+    frame.setLayout(new BorderLayout(10, 10));  //add some spacing between components
 
     //keep them like this, the panels finally in the correct order
     //I mean it. dont mess with them 
@@ -49,19 +49,19 @@ public class UI {
     addPlayerPanel2();  //Add Red player panel
     initializeBoard();  //Add the initial game board
 
-    frame.setLocationRelativeTo(null);  //Center the frame
-    frame.setVisible(true);  //Show the frame
+    frame.setLocationRelativeTo(null);  //center the frame
+    frame.setVisible(true);  //show the frame
     }
 
     private void addTopPanel() {
-        JPanel topPanel = new JPanel(new BorderLayout());  //Parent container panel
+        JPanel topPanel = new JPanel(new BorderLayout());  //parent container panel
     
-        //Game mode panel (Simple/General Game), keep on the left
+        //game mode panel (Simple/General Game), keep on the left
         gameModePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        simpleGameButton = new JRadioButton("Simple Game", true);  //Default selection
+        simpleGameButton = new JRadioButton("Simple Game", true);  //default selection to simple
         generalGameButton = new JRadioButton("General Game");
     
-        ButtonGroup gameModeGroup = new ButtonGroup();  //Group radio buttons
+        ButtonGroup gameModeGroup = new ButtonGroup();  //group radio buttons
         gameModeGroup.add(simpleGameButton);
         gameModeGroup.add(generalGameButton);
     
@@ -72,22 +72,22 @@ public class UI {
         gameModePanel.add(simpleGameButton);
         gameModePanel.add(generalGameButton);
     
-        topPanel.add(gameModePanel, BorderLayout.WEST);  //Add the game mode panel - left
+        topPanel.add(gameModePanel, BorderLayout.WEST);  //add the game mode panel - left
     
-        //Add the board size label - right
+        //add the board size label - right
         boardSizeLabel = new JLabel("Board Size: " + gameBoard.getSize() + "x" + gameBoard.getSize());
         boardSizeLabel.setHorizontalAlignment(JLabel.RIGHT);  //Align to the right
         boardSizeLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));  //Add padding
         topPanel.add(boardSizeLabel, BorderLayout.EAST);  //Add the label to the right
     
-        //Add the top panel to frame
+        //add the top panel to frame
         frame.add(topPanel, BorderLayout.NORTH);
     }
 
     //THIS will need to change to different game logic- maybe extends gameboard??
     void updateGameMode(int size, String mode) { //made package-private for testing - int size used to be parameter
   
-        frame.remove(boardPanel);  //Remove the old board
+        frame.remove(boardPanel);  //remove old board
         //if function, for selection of general vs simple??
         
         if (mode.equals("Simple Game")) {
@@ -100,10 +100,10 @@ public class UI {
             currentGameMode = gameController.getGameMode();
         }
     
-        //Update the board size label w/ new mode & size - maybe this should come from game mode??
+        //update the board size label w/ new mode & size - maybe this should come from game mode??
         boardSizeLabel.setText(mode + " - Board Size: " + size + "x" + size);
     
-        //Reinit the board
+        //reinit the board
         initializeBoard();
         frame.revalidate();
         frame.repaint();
@@ -114,10 +114,10 @@ public class UI {
         playerPanel.setLayout(new BoxLayout(playerPanel, BoxLayout.Y_AXIS));
         playerPanel.setBorder(BorderFactory.createTitledBorder("Blue player"));
 
-        sButton = new JRadioButton("S", true);  //Default selection
+        sButton = new JRadioButton("S", true);  //default selection to s
         oButton = new JRadioButton("O");
 
-        ButtonGroup group = new ButtonGroup();  //Group radio buttons to allow only one selection
+        ButtonGroup group = new ButtonGroup();  //group radio buttons to allow only one selection
         group.add(sButton);
         group.add(oButton);
 
@@ -127,8 +127,8 @@ public class UI {
         sButton.addActionListener(e -> currentGameMode.setPlayer1Choice('S'));
         oButton.addActionListener(e -> currentGameMode.setPlayer1Choice('O'));
 
-        playerPanel.setPreferredSize(new Dimension(200, frame.getHeight()));  //Set panel size
-        frame.add(playerPanel, BorderLayout.WEST);  //Add player panel to the frame
+        playerPanel.setPreferredSize(new Dimension(200, frame.getHeight()));  //set panel size
+        frame.add(playerPanel, BorderLayout.WEST);  //add player panel to the frame
     }
 
     private void addPlayerPanel2() {
@@ -136,10 +136,10 @@ public class UI {
         playerPanel.setLayout(new BoxLayout(playerPanel, BoxLayout.Y_AXIS));
         playerPanel.setBorder(BorderFactory.createTitledBorder("Red player"));
 
-        sButton2 = new JRadioButton("S", true);  //Default selection
+        sButton2 = new JRadioButton("S", true);  //default selection
         oButton2 = new JRadioButton("O");
 
-        ButtonGroup group = new ButtonGroup();  //Group radio buttons
+        ButtonGroup group = new ButtonGroup();  //group radio buttons
         group.add(sButton2);
         group.add(oButton2);
 
@@ -149,53 +149,53 @@ public class UI {
         sButton2.addActionListener(e -> currentGameMode.setPlayer2Choice('S'));
         oButton2.addActionListener(e -> currentGameMode.setPlayer2Choice('O'));
 
-        playerPanel.setPreferredSize(new Dimension(200, frame.getHeight()));  //Set panel size
-        frame.add(playerPanel, BorderLayout.EAST);  //Add player panel to the frame
+        playerPanel.setPreferredSize(new Dimension(200, frame.getHeight()));  //set panel size
+        frame.add(playerPanel, BorderLayout.EAST);  //add player panel to the frame
     }
 
     private void initializeBoard() {
         boardPanel = new JPanel(new GridLayout(gameBoard.getSize(), gameBoard.getSize()));  //create a grid layout
-        boardPanel.setPreferredSize(new Dimension(300, 300));  //Set the board panel size
+        boardPanel.setPreferredSize(new Dimension(300, 300));  //set the board panel size
         boardPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));  //add border
     
         for (int i = 0; i < gameBoard.getSize(); i++) {
             for (int j = 0; j < gameBoard.getSize(); j++) {
                 JLabel cell = new JLabel("", JLabel.CENTER);  //Use JLabel for the cell
                 cell.setOpaque(true);  //make label opaque
-                cell.setPreferredSize(new Dimension(50, 50));  //Set cell size
-                cell.setBorder(BorderFactory.createLineBorder(Color.BLACK));  //Add border around each cell
+                cell.setPreferredSize(new Dimension(50, 50));  //set cell size
+                cell.setBorder(BorderFactory.createLineBorder(Color.BLACK));  //sdd border around each cell
     
-                //MouseListener to handle clicks
-                int row = i;  //Store row & column for use inside the listener
+                //mouseListener to handle clicks
+                int row = i;  //store row & column for use inside the listener
                 int col = j;
                 cell.addMouseListener(new java.awt.event.MouseAdapter() {
                     @Override
                     public void mouseClicked(java.awt.event.MouseEvent e) {
-                        handleMove(row, col, cell);  //Handle move when clicked
+                        handleMove(row, col, cell);  //handle move when clicked
                     }
                 });
     
-                boardPanel.add(cell);  //Add cell to the board panel
+                boardPanel.add(cell);  //add cell to the board panel
             }
         }
     
-        frame.add(boardPanel, BorderLayout.CENTER);  //Add the board panel to frame
+        frame.add(boardPanel, BorderLayout.CENTER);  //add the board panel to frame
     }
    
     private void handleMove(int row, int col, JLabel cell) {
-        boolean isPlayerOneTurn = gameController.isPlayerOneTurn();  //Check current turn
+        boolean isPlayerOneTurn = gameController.isPlayerOneTurn();  //check current turn
         //char letter = gameController.getCurrentPlayerChoice();  //Get s or o - this was from before sprint 3
         char letter = isPlayerOneTurn ? getchoicePlayer1() : getchoicePlayer2();
         char player = isPlayerOneTurn ? '1' : '2';  //to help keep track of points
 
-        if (gameController.makeMove(row, col, letter, player)) {  //If the move valid
-            cell.setText(String.valueOf(letter));  //Display the player choice
+        if (gameController.makeMove(row, col, letter, player)) {  //if the move valid
+            cell.setText(String.valueOf(letter));  //display the player choice
     
-            //Set color of letters
+            //set color for letters
             cell.setForeground(isPlayerOneTurn ? Color.BLUE : Color.RED);
 
 
-            //Check for game over - determine how this works with new game mode classes
+            //check for game over - determine how this works with new game mode classes
         if (currentGameMode.checkGameOver(row, col)) {
             String winner = currentGameMode.getWinner();
             JOptionPane.showMessageDialog(frame, winner);
@@ -209,17 +209,17 @@ public class UI {
         } else if (oButton.isSelected()) {
             return 'O';
         }
-        return ' ';  // Default in case neither is selected (though this shouldn't happen)
+        return ' ';  //default in case neither is selected - this shouldn't happen. but just in case...
     }
     
-    //Helper function to get the selected letter for Player 2
+    //helper function to get the selected letter for Player 2
     private char getchoicePlayer2() {
         if (sButton2.isSelected()) {
             return 'S';
         } else if (oButton2.isSelected()) {
             return 'O';
         }
-        return ' ';  //Default in case neither is selected
+        return ' ';  //same as above
     }
 
 //getters for testing

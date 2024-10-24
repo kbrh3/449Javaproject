@@ -1,7 +1,7 @@
 package com.example;
 //manage logic and state
 public class GameController {
-    private GameMode currentGameMode;  // Use a common interface like GameMode
+    private GameMode currentGameMode;  
     private GameBoard gameBoard;
     public GameController(GeneralGame ggame) {
         this.gameBoard = ggame.getGameBoard(); //gameboard from general game

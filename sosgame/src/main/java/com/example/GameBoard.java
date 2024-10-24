@@ -1,9 +1,9 @@
 package com.example;
 
 public class GameBoard {
-    private char[][] grid; //Change grid to a char array??
-    private char[][] moves;  // Stores 'B' (blue) or 'R' (red) - check to make sure this works 10/20/24
-    private int size; //Variable for dynamic sizing
+    private char[][] grid; //change grid to a char array??
+    private char[][] moves;  // stores 'B' (blue) or 'R' (red) - check to make sure this works 10/20/24
+    private int size; //variable for dynamic sizing - may not need this
 
     public boolean isFull() {
         for (int i = 0; i < size; i++) {
@@ -17,7 +17,7 @@ public class GameBoard {
     }
     
 
-    //Constructor - initialize the board with a specified size
+    //constructor - initialize  board with specified size
     public GameBoard(int size) {
         this.size = size; //Set board size
         grid = new char[this.size][this.size]; //Initialize grid based on the size
@@ -25,7 +25,7 @@ public class GameBoard {
         initializeBoard();
     }
     //this may have a version in controller, make sure we are using the right one
-    //Place a move and track the player who made it ('B' for blue, 'R' for red) - not done yet, may not need
+    //place a move and track the player who made it ('B' for blue, 'R' for red) - not done yet, may not need
     public boolean setMove(int row, int col, char letter, char player) {
         if (grid[row][col] == ' ' && moves[row][col] == ' ') {
             grid[row][col] = letter;
@@ -43,15 +43,15 @@ public class GameBoard {
         //check directions around the s
         int[][] directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}, {1, 1}, {-1, -1}, {1, -1}, {-1, 1}};
 
-        //Check all four directions - GPT assisted with the logic here, this was a tough one
+        //check all four directions - GPT assisted with the logic here, this was a tough one
         for (int[] dir : directions) {
             int checkRow = dir[0];
             int checkCol = dir[1];
 
-            //Check boundaries before accessing
+            //check boundaries before accessing
         if (validBoundary(row + checkRow, col + checkCol) && 
         validBoundary(row + 2 * checkRow, col + 2 * checkCol)) {
-        //Check for the sos pattern
+        //check for the sos pattern
         if (grid[row + checkRow][col + checkCol] == 'O' &&
             grid[row + 2 * checkRow][col + 2 * checkCol] == 'S' &&
             moves[row + checkRow][col + checkCol] == player &&
@@ -68,7 +68,7 @@ public class GameBoard {
         return row >= 0 && row < size && col >= 0 && col < size;
     }
 
-    //Method to initialize / reset the board
+    //method to initialize / reset the board
     private void initializeBoard() {
         for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {
@@ -82,7 +82,7 @@ public class GameBoard {
         return grid[row][col]; //val at specified spot
     }
 
-    //Set the move on the board, checking if the cell is empty
+    //set the move on the board, check if the cell is empty
     public boolean setMove(int x, int y, char player) {
         if (grid[x][y] == ' ') { //Check if cell is empty
             grid[x][y] = player; //Place player's character
