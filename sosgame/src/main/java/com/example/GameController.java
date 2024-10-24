@@ -44,6 +44,9 @@ public boolean isPlayerOneTurn() {
 public GameBoard getGameBoard() {
         return this.gameBoard;
     }
+public GameMode getGameMode(){
+    return this.currentGameMode;
+}
     
     //logic here is a bit off, make sure this isn't causing problems
 public boolean makeMove(int row, int col, char choice, char player) {

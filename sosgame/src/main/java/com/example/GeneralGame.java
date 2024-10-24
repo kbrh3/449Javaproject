@@ -47,9 +47,9 @@ public class GeneralGame implements GameMode{
         }
         return false;
     }
-
-    public boolean checkGameOver() {
-        // In GeneralGame, the game ends when the board is full
+    //dont really need row or column, but makes it simpler for gameMode.java
+    public boolean checkGameOver(int row, int col) {
+        //game ends when the board is full
         return gameBoard.isFull();
     }
 

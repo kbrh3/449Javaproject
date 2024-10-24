@@ -7,7 +7,7 @@ package com.example;
 public class SimpleGame implements GameMode {
     private GameBoard gameBoard;
     private boolean isPlayerOneTurn = true;
-    private int size = 8;
+    private int size;
 
     public SimpleGame(int size) {
         this.gameBoard = new GameBoard(size);
@@ -53,7 +53,7 @@ public class SimpleGame implements GameMode {
         return ' '; 
     }
 
-    //Check if the game is over
+    @Override
     public boolean checkGameOver(int row, int col) {
         //game ends if sos or board is full (draw)
         return gameBoard.checkSOS(row, col) || gameBoard.isFull();

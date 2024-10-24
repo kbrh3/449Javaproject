@@ -10,6 +10,7 @@ import java.awt.Color;
 
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -22,6 +23,7 @@ public class UI {
 
     private JFrame frame;
     private GameBoard gameBoard;  //Reference GameBoard class
+    private GameMode currentGameMode;  //Use a common interface like GameMode
     private JRadioButton sButton, oButton;  //Radio buttons for blue player
     private JRadioButton sButton2, oButton2;  //Radio buttons for red player
     JLabel boardSizeLabel;  //Display board size
@@ -33,6 +35,7 @@ public class UI {
     public UI() {
         gameController = new GameController(new SimpleGame(8));  //Init the game controller w/ size 8x8
         gameBoard = new GameBoard(8);  //Init the game board w/ size 8x8
+        currentGameMode = gameController.getGameMode();
         initUI();  //Init user interface
     }
 
@@ -85,27 +88,26 @@ public class UI {
     }
 
     //THIS will need to change to different game logic- maybe extends gameboard??
-    void updateGameMode(int size, String mode) { //made package-private for testing
-        //Update the game board & controller w/ new size
-        
-        //below to board panels from piling up 10/15/24
+    void updateGameMode(int size, String mode) { //made package-private for testing - int size used to be parameter
+  
         frame.remove(boardPanel);  //Remove the old board
         //if function, for selection of general vs simple??
-        gameBoard = new GameBoard(size);
+        
         if (mode.equals("Simple Game")) {
             gameController = new GameController(new SimpleGame(8));
+            gameBoard = new GameBoard(size);
+            currentGameMode = gameController.getGameMode();
         } else if (mode.equals("General Game")) {
             gameController = new GameController(new GeneralGame(10));
+            gameBoard = new GameBoard(size);
+            currentGameMode = gameController.getGameMode();
         }
-    
     
         //Update the board size label w/ new mode & size - maybe this should come from game mode??
         boardSizeLabel.setText(mode + " - Board Size: " + size + "x" + size);
     
         //Reinit the board
         initializeBoard();
-    
-        //Refresh frame & apply the changes
         frame.revalidate();
         frame.repaint();
     }
@@ -186,7 +188,7 @@ public class UI {
     private void handleMove(int row, int col, JLabel cell) {
         boolean isPlayerOneTurn = gameController.isPlayerOneTurn();  //Check current turn
         //char letter = gameController.getCurrentPlayerChoice();  //Get s or o - this was from before sprint 3
-        char letter = isPlayerOneTurn ? getSelectedLetterFromPlayerOne() : getSelectedLetterFromPlayerTwo();
+        char letter = isPlayerOneTurn ? getchoicePlayer1() : getchoicePlayer2();
         char player = isPlayerOneTurn ? '1' : '2';  //to help keep track of points
 
         if (gameController.makeMove(row, col, letter, player)) {  //If the move valid
@@ -198,10 +200,16 @@ public class UI {
             } else {
                 cell.setForeground(Color.RED);  //Red player
             }
+
+            // Check for game over - determine how this works with new game mode classes
+        if (currentGameMode.checkGameOver(row, col)) {
+            String winner = currentGameMode.getWinner(row, col);
+            JOptionPane.showMessageDialog(frame, winner);
+        }
         }
     }
     
-    private char getSelectedLetterFromPlayerOne() {
+    private char getchoicePlayer1() {
         if (sButton.isSelected()) {
             return 'S';
         } else if (oButton.isSelected()) {
@@ -211,7 +219,7 @@ public class UI {
     }
     
     // Helper function to get the selected letter for Player 2
-    private char getSelectedLetterFromPlayerTwo() {
+    private char getchoicePlayer2() {
         if (sButton2.isSelected()) {
             return 'S';
         } else if (oButton2.isSelected()) {
