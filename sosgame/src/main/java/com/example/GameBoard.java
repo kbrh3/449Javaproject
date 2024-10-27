@@ -2,7 +2,7 @@ package com.example;
 
 public class GameBoard {
     private char[][] grid; //change grid to a char array??
-    private char[][] moves;  // stores 'B' (blue) or 'R' (red) - check to make sure this works 10/20/24
+    private char[][] moves;  //stores 'B' (blue) or 'R' (red) - check to make sure this works 10/20/24
     private int size; //variable for dynamic sizing - may not need this
 
     public boolean isFull() {
@@ -80,6 +80,10 @@ public class GameBoard {
 
     public char getValueAt(int row, int col) {
         return grid[row][col]; //val at specified spot
+    }
+
+    public char checkplayer(int row, int col) {
+        return moves[row][col];
     }
 
     //set the move on the board, check if the cell is empty
