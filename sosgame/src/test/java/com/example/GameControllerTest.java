@@ -53,7 +53,7 @@ public class GameControllerTest {
         assertFalse(controller.isPlayerOneTurn(), "Turn should switch after valid move");
         assertEquals('O', controller.getCurrentPlayerChoice(), "Should be player two's choice");
     }
-    
+    //error - 10/27/24
     @Test
     void testValidMoveGeneralGame() {
         GameController controller = new GameController(generalGame);
@@ -62,7 +62,7 @@ public class GameControllerTest {
         assertFalse(controller.isPlayerOneTurn(), "Turn should switch after valid move");
         assertEquals('O', controller.getCurrentPlayerChoice(), "Should be player two's choice");
     }
-    
+    //error - 10/27/24
     @Test
     void testInvalidMoveSimpleGame() {
         GameController controller = new GameController(simpleGame);

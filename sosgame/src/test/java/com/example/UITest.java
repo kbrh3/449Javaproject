@@ -5,7 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 //import javax.swing.JLabel; dont need rn
 //import javax.swing.JRadioButton; dont need rn
-
+//all tests run 10/27/24
 public class UITest {
     private UI ui;
 

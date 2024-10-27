@@ -3,7 +3,7 @@ package com.example;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-
+//errors here,check logic
 public class SimpleGameTest {
     private SimpleGame game;
     private static final int BOARD_SIZE = 3;
@@ -41,7 +41,7 @@ public class SimpleGameTest {
         // Try to make move in same position
         assertFalse(game.makeMove(0, 0, 'S', 'R'));
     }
-    
+    //error - 10/27/24
     @Test
     public void testSOSWinHorizontal() {
         // Create SOS horizontally
@@ -52,7 +52,7 @@ public class SimpleGameTest {
         assertTrue(game.checkGameOver(0, 2));
         assertEquals("Blue Player Wins!", game.getWinner());
     }
-    
+    //error - 10/27/24
     @Test
     public void testSOSWinVertical() {
         // Create SOS vertically
@@ -63,7 +63,7 @@ public class SimpleGameTest {
         assertTrue(game.checkGameOver(2, 0));
         assertEquals("Blue Player Wins!", game.getWinner());
     }
-    
+    //error - 10/27/24
     @Test
     public void testSOSWinDiagonal() {
         // Create SOS diagonally

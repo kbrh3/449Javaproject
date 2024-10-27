@@ -14,8 +14,8 @@ public class GeneralGame implements GameMode{
     private int player2points = 0;
     private char player1Choice = 'S';  //Default choice
     private char player2Choice = 'S';  //Default choice
-    private static final char BLUE_PLAYER = 'B'; //color tracking for point collection
-    private static final char RED_PLAYER = 'R';
+    private static final char bluePlayer = 'B'; //color tracking for point collection
+    private static final char redPlayer = 'R';
     int size = 10;
 
     public GeneralGame(int size) {
@@ -28,7 +28,7 @@ public class GeneralGame implements GameMode{
             return false;
         }
 
-        char currentPlayer = isPlayerOneTurn ? BLUE_PLAYER : RED_PLAYER;
+        char currentPlayer = isPlayerOneTurn ? bluePlayer : redPlayer;
         
         if (gameBoard.setMove(row, col, letter, currentPlayer)) {
             // Pass the current player's mark to checkSOS
