@@ -1,12 +1,28 @@
 package com.example;
-
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+
 public class GameControllerTest {
-    SimpleGame simpleGame = new SimpleGame(3);  // or whatever board size you want to test with
-    GeneralGame generalGame = new GeneralGame(3);
+    private SimpleGame simpleGame;
+    private GeneralGame generalGame;
+    private GameController simpleController;
+    private GameController generalController;
     
+    @BeforeEach
+    void setUp() {
+        simpleGame = new SimpleGame(3);
+        generalGame = new GeneralGame(3);
+        simpleController = new GameController(simpleGame);
+        generalController = new GameController(generalGame);
+        
+        // Set initial choices for players
+        simpleGame.setPlayer1Choice('S');
+        simpleGame.setPlayer2Choice('S');
+        generalGame.setPlayer1Choice('S');
+        generalGame.setPlayer2Choice('S');
+    }
     @Test
     void testInitializationWithSimpleGame() {
         GameController controller = new GameController(simpleGame);
@@ -26,42 +42,85 @@ public class GameControllerTest {
         assertTrue(controller.getGameMode() instanceof GeneralGame, "GameMode should be GeneralGame");
         assertTrue(controller.isPlayerOneTurn(), "Should start with player one's turn");
     }
-    
     @Test
     void testGetCurrentPlayerChoiceSimpleGame() {
-        GameController controller = new GameController(simpleGame);
+        // Initially both players have 'S'
+        assertEquals('S', simpleController.getCurrentPlayerChoice(), 
+            "Player one should start with 'S'");
         
-        assertEquals('S', controller.getCurrentPlayerChoice(), "Player one should start with 'S'");
-        controller.makeMove(0, 0, 'S', 'B');  // Make a move to switch turns
-        assertEquals('O', controller.getCurrentPlayerChoice(), "Player two should have 'O'");
+        // Change player 2's choice to 'O'
+        simpleGame.setPlayer2Choice('O');
+        
+        // Make a move to switch turns
+        simpleController.makeMove(0, 0, 'S', 'B');
+        
+        // Now should get player 2's choice
+        assertEquals('O', simpleController.getCurrentPlayerChoice(), 
+            "Should get player two's choice after turn switch");
     }
     
     @Test
     void testGetCurrentPlayerChoiceGeneralGame() {
-        GameController controller = new GameController(generalGame);
+        // Initially both players have 'S'
+        assertEquals('S', generalController.getCurrentPlayerChoice(), 
+            "Player one should start with 'S'");
         
-        assertEquals('S', controller.getCurrentPlayerChoice(), "Player one should start with 'S'");
-        controller.makeMove(0, 0, 'S', 'B');  // Make a move to switch turns
-        assertEquals('O', controller.getCurrentPlayerChoice(), "Player two should have 'O'");
+        // Change player 2's choice to 'O'
+        generalGame.setPlayer2Choice('O');
+        
+        // Make a move to switch turns
+        generalController.makeMove(0, 0, 'S', 'B');
+        
+        // Now should get player 2's choice
+        assertEquals('O', generalController.getCurrentPlayerChoice(), 
+            "Should get player two's choice after turn switch");
     }
+
+    @Test
+    void testPlayerChoiceSwitching() {
+        // Set different choices for players
+        simpleGame.setPlayer1Choice('S');
+        simpleGame.setPlayer2Choice('O');
+        
+        // Check initial choice
+        assertEquals('S', simpleController.getCurrentPlayerChoice(), 
+            "Should start with player 1's choice");
+        
+        // Make move and check if choice switches
+        simpleController.makeMove(0, 0, 'S', 'B');
+        assertEquals('O', simpleController.getCurrentPlayerChoice(), 
+            "Should switch to player 2's choice");
+        
+        // Make another move and check if choice switches back
+        simpleController.makeMove(1, 0, 'O', 'R');
+        assertEquals('S', simpleController.getCurrentPlayerChoice(), 
+            "Should switch back to player 1's choice");
+    }
+    @Test
+void testValidMoveSimpleGame() {
+    GameController controller = new GameController(simpleGame);
     
+    // Set initial choices for both players
+    simpleGame.setPlayer1Choice('S');
+    simpleGame.setPlayer2Choice('O');  // Set player 2's choice to 'O'
+    
+    assertTrue(controller.makeMove(0, 0, 'S', 'B'), "Valid move should return true");
+    assertFalse(controller.isPlayerOneTurn(), "Turn should switch after valid move");
+    assertEquals('O', controller.getCurrentPlayerChoice(), "Should be player two's choice");
+}
+    //fixed - 10/28/24
     @Test
-    void testValidMoveSimpleGame() {
-        GameController controller = new GameController(simpleGame);
-        
-        assertTrue(controller.makeMove(0, 0, 'S', 'B'), "Valid move should return true");
-        assertFalse(controller.isPlayerOneTurn(), "Turn should switch after valid move");
-        assertEquals('O', controller.getCurrentPlayerChoice(), "Should be player two's choice");
-    }
-    //error - 10/27/24
-    @Test
-    void testValidMoveGeneralGame() {
-        GameController controller = new GameController(generalGame);
-        
-        assertTrue(controller.makeMove(0, 0, 'S', 'B'), "Valid move should return true");
-        assertFalse(controller.isPlayerOneTurn(), "Turn should switch after valid move");
-        assertEquals('O', controller.getCurrentPlayerChoice(), "Should be player two's choice");
-    }
+void testValidMoveGeneralGame() {
+    GameController controller = new GameController(generalGame);
+    
+    // Set initial choices for both players
+    generalGame.setPlayer1Choice('S');
+    generalGame.setPlayer2Choice('O');  // Set player 2's choice to 'O'
+    
+    assertTrue(controller.makeMove(0, 0, 'S', 'B'), "Valid move should return true");
+    assertFalse(controller.isPlayerOneTurn(), "Turn should switch after valid move");
+    assertEquals('O', controller.getCurrentPlayerChoice(), "Should be player two's choice");
+}
     //error - 10/27/24
     @Test
     void testInvalidMoveSimpleGame() {

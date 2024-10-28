@@ -1,166 +1,217 @@
 package com.example;
-//General Game:
-//The game continues until the entire board is filled.
-//The winner is the player who has formed the most SOS sequences by the time the board is full.
-//If both players have created the same number of SOSs, the game is a draw.
-//When a player successfully forms an SOS, they immediately get another turn. 
-//This process continues as long as the player keeps forming SOS
-//Each player’s SOS count must be tracked throughout the game -The player with the most SOS sequences at the end of the game wins.
+//general game:
+//the game continues until the entire board is filled
+//the winner is the player who has formed the most sos sequences by the time the board is full
+//if both players have created the same number of sos's, the game is a draw
+//when a player successfully forms an sos, they immediately get another turn 
+//this process continues as long as the player keeps forming sos
+//each player's sos count must be tracked throughout the game
+//the player with the most sos sequences at the end of the game wins
 
 public class GeneralGame implements GameMode{
+    //setup the game board and tracking variables
     private GameBoard gameBoard;
     private boolean isPlayerOneTurn = true;
     private int player1points = 0;
     private int player2points = 0;
-    private char player1Choice = 'S';  //Default choice
-    private char player2Choice = 'S';  //Default choice
-    private static final char bluePlayer = 'B'; //color tracking for point collection
+    private char player1Choice = 'S';  //start both players with s as default
+    private char player2Choice = 'S';  
+    private static final char bluePlayer = 'B'; //used to track move colors on board
     private static final char redPlayer = 'R';
     int size = 10;
 
     public GeneralGame(int size) {
         this.gameBoard = new GameBoard(size);
     }
-//copied from gamecontroller but updated for this game mode
+
     @Override
-    public boolean makeMove(int row, int col, char letter, char player) {
-        if (!isValidMove(row, col)) {
-            return false;
-        }
-
-        char currentPlayer = isPlayerOneTurn ? bluePlayer : redPlayer;
-        
-        if (gameBoard.setMove(row, col, letter, currentPlayer)) {
-            // Pass the current player's mark to checkSOS
-            if (gameBoard.checkSOS(row, col)) {
-                // Only increment points if the SOS was formed with the current player's marks
-                if (isValidSOS(row, col, currentPlayer)) {
-                    incrementPoints();
-                    return true;  // Player gets another turn
-                }
-            }
-            togglePlayerTurn();  // No valid SOS, toggle turn
-            return true;
-        }
-        return false;  // Invalid move
-    }
-
-    private boolean isValidSOS(int row, int col, char playerMark) {
-        // Check all possible SOS directions
-        int[][] directions = {
-            {0, 1},   // horizontal
-            {1, 0},   // vertical
-            {1, 1},   // diagonal down-right
-            {1, -1},  // diagonal down-left
-            {0, -1},  // horizontal reverse
-            {-1, 0},  // vertical reverse
-            {-1, -1}, // diagonal up-left
-            {-1, 1}   // diagonal up-right
-        };
-
-        for (int[] dir : directions) {
-            int r1 = row + dir[0];
-            int c1 = col + dir[1];
-            int r2 = row + 2 * dir[0];
-            int c2 = col + 2 * dir[1];
-
-            if (isValidPosition(r1, c1) && isValidPosition(r2, c2)) {
-                // Check if we have an 'S' at current position
-                if (gameBoard.getValueAt(row, col) == 'S') {
-                    // Check if we have 'O' and 'S' in sequence
-                    if (gameBoard.getValueAt(r1, c1) == 'O' && 
-                        gameBoard.getValueAt(r2, c2) == 'S') {
-                        // Verify all three positions have the same player mark
-                        if (gameBoard.checkplayer(row, col) == playerMark &&
-                            gameBoard.checkplayer(r1, c1) == playerMark &&
-                            gameBoard.checkplayer(r2, c2) == playerMark) {
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
+public boolean makeMove(int row, int col, char letter, char player) {
+    //check if move allowed
+    if (!isValidMove(row, col)) {
         return false;
     }
 
-    private boolean isValidPosition(int row, int col) {
-        return row >= 0 && row < gameBoard.getSize() && 
-               col >= 0 && col < gameBoard.getSize();
+    //set current player based on color
+    if (player == bluePlayer) {
+        isPlayerOneTurn = true;
+    } else if (player == redPlayer) {
+        isPlayerOneTurn = false;
     }
 
-    private boolean isValidMove(int row, int col) {
-        return isValidPosition(row, col);
-    }
-
-    private void incrementPoints() {
-        if (isPlayerOneTurn) {
-            player1points++;
+    //try to make the move on the board
+    if (gameBoard.setMove(row, col, letter, player)) {
+        boolean sosFormed = false;
+        
+        //check for sos based on what letter was placed
+        if (letter == 'S') {
+            sosFormed = isValidSOS(row, col, player);
+        } else if (letter == 'O') {
+            sosFormed = checkOPlacement(row, col, player);
+        }
+        
+        //if sos was made, add points and keep turn
+        if (sosFormed) {
+            incrementPoints();
+            return true;
         } else {
-            player2points++;
+            //no sos,switch turns
+            togglePlayerTurn();
+            return true;
         }
     }
+    return false;
+}
 
-    
-    @Override
-    public boolean isPlayerOneTurn() {
-        return isPlayerOneTurn;
+private void incrementPoints() {
+    //add point to sos player
+    if (isPlayerOneTurn) {
+        player1points++;
+        System.out.println("Blue player points now: " + player1points);
+    } else {
+        player2points++;
+        System.out.println("Red player points now: " + player2points);
     }
+}
 
-    @Override
-    public char getCurrentPlayerChoice() {
-        return isPlayerOneTurn ? player1Choice : player2Choice;  
+public String getWinner() {
+    //compare points to get winner
+    if (player1points > player2points) {
+        return String.format("Player 1 wins! (Blue: %d, Red: %d)", 
+                           player1points, player2points);
+    } else if (player2points > player1points) {
+        return String.format("Player 2 wins! (Red: %d, Blue: %d)", 
+                           player2points, player1points);
+    } else {
+        return String.format("It's a draw! (Both: %d)", player1points);
     }
+}
 
-    @Override
+private boolean isValidSOS(int row, int col, char playerMark) {
+    //all possible directions to check for sos
+    //gpt helped with the logic here, this confused me
+    int[][] directions = {
+        {0, 1},   //right
+        {1, 0},   //down
+        {1, 1},   //diagonal down-right
+        {1, -1},  //diagonal down-left
+        {0, -1},  //left
+        {-1, 0},  //up
+        {-1, -1}, //diagonal up-left
+        {-1, 1}   //diagonal up-right
+    };
+
+    boolean sosFound = false;
+    for (int[] dir : directions) {
+        //calc positions to check
+        int r1 = row + dir[0];
+        int c1 = col + dir[1];
+        int r2 = row + 2 * dir[0];
+        int c2 = col + 2 * dir[1];
+
+        //check if positions are on board
+        if (isValidPosition(r1, c1) && isValidPosition(r2, c2)) {
+            //look for o in middle and s at end w/ matching colors
+            if (gameBoard.getValueAt(r1, c1) == 'O' && 
+                gameBoard.getValueAt(r2, c2) == 'S' &&
+                gameBoard.checkplayer(r1, c1) == playerMark &&
+                gameBoard.checkplayer(r2, c2) == playerMark) {
+                sosFound = true;
+            }
+        }
+    }
+    return sosFound;
+}
+
+private boolean isValidPosition(int row, int col) {
+    //make sure position inside the board
+    return row >= 0 && row < gameBoard.getSize() && 
+           col >= 0 && col < gameBoard.getSize();
+}
+
+private boolean isValidMove(int row, int col) {
+    //check if move within board boundaries
+    return isValidPosition(row, col);
+}
+
+private boolean checkOPlacement(int row, int col, char playerMark) {
+    //check sos when placing an o
+    int[][] sPositions = {
+        {-1, -1, 1, 1},   //diagonal
+        {-1, 1, 1, -1},   //other diagonal
+        {-1, 0, 1, 0},    //vertical
+        {0, -1, 0, 1}     //horizontal
+    };
+
+    for (int[] pos : sPositions) {
+        //calc positions to check
+        int r1 = row + pos[0];
+        int c1 = col + pos[1];
+        int r2 = row + pos[2];
+        int c2 = col + pos[3];
+
+        //check if positions are on board
+        if (isValidPosition(r1, c1) && isValidPosition(r2, c2)) {
+            //look for s letters at both ends w/ matching colors
+            if (gameBoard.getValueAt(r1, c1) == 'S' && 
+                gameBoard.getValueAt(r2, c2) == 'S' &&
+                gameBoard.checkplayer(r1, c1) == playerMark &&
+                gameBoard.checkplayer(r2, c2) == playerMark) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+@Override
+public boolean isPlayerOneTurn() {
+    return isPlayerOneTurn;
+}
+
+@Override
+public char getCurrentPlayerChoice() {
+    //get current player's selected letter
+    return isPlayerOneTurn ? player1Choice : player2Choice;  
+}
+
+@Override
 public boolean checkGameOver(int row, int col) {
-    // Game only ends when board is full in General Game mode
+    //game only ends when board completely full
     return gameBoard.isFull();
 }
-//might need to call gameBoard.isFull() somewhere in here - double check that
-    public String getWinner() {
-        //player with the most SOSs wins
-        if (player1points > player2points) {
-           // return "Player 1 wins!";
-            return String.format("Player 1 wins! (Blue: %d, Red: %d)", 
-            player1points, player2points);} 
-            else if (player2points > player1points) {
-            //return "Player 2 wins!";
-            return String.format("Player 2 wins! (Red: %d, Blue: %d)", 
-                               player2points, player1points);}
-            else {return String.format("It's a draw! (Both: %d)", player1points);}
-    }
 
-    //toggle may be different here, not sure where that will be implimented
-    private void togglePlayerTurn() {
-        isPlayerOneTurn = !isPlayerOneTurn;
-    }
-
-    public GameBoard getGameBoard() {
-        return this.gameBoard;
-    }
-    //set player one choice
-    public void setPlayer1Choice(char choice) {
-    this.player1Choice = choice;
-    }
-    //get player one choice
-    public char getPlayer1Choice() {
-    return player1Choice;
-    }
-    //set player two choice
-    public void setPlayer2Choice(char choice) {
-    this.player2Choice = choice;
-    }
-    //get player two choice
-    public char getPlayer2Choice() {
-    return player2Choice;
-    }
-
-    public int getPlayer1Points() {
-        return player1points;
-    }
-
-    public int getPlayer2Points() {
-        return player2points;
-    }
+private void togglePlayerTurn() {
+    //switch to other player's turn
+    isPlayerOneTurn = !isPlayerOneTurn;
 }
 
+public GameBoard getGameBoard() {
+    return this.gameBoard;
+}
+
+//handle player letter choices
+public void setPlayer1Choice(char choice) {
+    this.player1Choice = choice;
+}
+
+public char getPlayer1Choice() {
+    return player1Choice;
+}
+
+public void setPlayer2Choice(char choice) {
+    this.player2Choice = choice;
+}
+
+public char getPlayer2Choice() {
+    return player2Choice;
+}
+
+//get current point totals
+public int getPlayer1Points() {
+    return player1points;
+}
+
+public int getPlayer2Points() {
+    return player2points;
+}
+}

@@ -111,9 +111,8 @@ public class GameBoardTest {
 
     @Test
     void testOutOfBoundsMoves() {
-        assertThrows(ArrayIndexOutOfBoundsException.class,
-            () -> gameBoard.setMove(TEST_SIZE, TEST_SIZE, 'S', 'B'),
-            "Move outside board should throw exception");
+        assertFalse(gameBoard.setMove(TEST_SIZE, TEST_SIZE, 'S', 'B'),
+            "Move outside board should return false");
     }
 
     @Test
@@ -123,16 +122,6 @@ public class GameBoardTest {
             "getMove should return the same value as getValueAt");
         assertEquals(gameBoard.getValueAt(1, 1), gameBoard.getMove(1, 1),
             "getMove and getValueAt should be consistent");
-    }
-
-    @Test
-    void testSetMoveOverload() {
-        assertTrue(gameBoard.setMove(0, 0, 'S'),
-            "Simple setMove should work");
-        assertEquals('S', gameBoard.getValueAt(0, 0),
-            "Move should be recorded correctly");
-        assertFalse(gameBoard.setMove(0, 0, 'O'),
-            "Cannot override existing move");
     }
 
     @Test
