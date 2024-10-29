@@ -43,7 +43,7 @@ public class UI {
     frame.setLayout(new BorderLayout(10, 10));  //add some spacing between components
 
     //keep them like this, the panels finally in the correct order
-    //I mean it. dont mess with them 
+    //I mean it. dont mess with them
     addTopPanel();  //Add the top panel - game mode buttons and board size label
     addPlayerPanel();  //Add Blue player panel
     addPlayerPanel2();  //Add Red player panel

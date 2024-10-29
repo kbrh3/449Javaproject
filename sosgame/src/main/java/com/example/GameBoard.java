@@ -8,19 +8,19 @@ public class GameBoard {
     public boolean isFull() {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                if (grid[i][j] == ' ') { // Assuming ' ' represents an empty cell
-                    return false; //If any cell is empty-board is not full-end it here
+                if (grid[i][j] == ' ') { 
+                    return false; //any cell is empty is not full, end it here
                 }
             }
         }
-        return true; //cells are all filled, it is true, game is over
+        return true; //game is over if full cells
     }
     
 
-    //constructor - initialize  board with specified size
+    //constructor - init board with specified size
     public GameBoard(int size) {
-        this.size = size; //Set board size
-        grid = new char[this.size][this.size]; //Initialize grid based on the size
+        this.size = size; //set board size
+        grid = new char[this.size][this.size]; //init grid based on the size
         this.moves = new char[this.size][this.size];
         initializeBoard();
     }
@@ -55,7 +55,8 @@ public class GameBoard {
             if (validBoundary(r1, c1) && validBoundary(r2, c2)) {
                 if (grid[r1][c1] == 'O' && grid[r2][c2] == 'S' &&
                     moves[r1][c1] == player && moves[r2][c2] == player) {
-                    //System.out.println("Found SOS in direction: " + dir[0] + "," + dir[1]);
+                        //debug statement
+                    System.out.println("Found SOS in direction: " + dir[0] + "," + dir[1]);
                     return true;
                 }
             }
@@ -63,15 +64,15 @@ public class GameBoard {
         return false;
     }
     private boolean validBoundary(int row, int col) {
-        //check the row and col are in bounds of the grid
+        //check row and col in bounds
         return row >= 0 && row < size && col >= 0 && col < size;
     }
 
-    //method to initialize / reset the board
+    //method to init/reset the board
     private void initializeBoard() {
         for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {
-                grid[row][col] = ' '; //Use space ' ', means an empty cell
+                grid[row][col] = ' '; //Use space ' ', empty cell
                 moves[row][col] = ' ';  //No player move
             }
         }
