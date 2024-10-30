@@ -5,8 +5,6 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Dimension;
 import java.awt.Color;
-
-
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.BorderFactory;
@@ -31,7 +29,7 @@ public class UI {
 
     public UI() {
         gameController = new GameController(new SimpleGame(8));  //Init the game controller w/ size 8x8
-        gameBoard = new GameBoard(8);  //Init the game board w/ size 8x8
+        gameBoard = new GameBoard(8);  //Init the game board w/ size 8x8 b/c simple game
         currentGameMode = gameController.getGameMode(); //defaulting to simple game :)
         initUI();  //Init user interface
     }
@@ -44,13 +42,13 @@ public class UI {
 
     //keep them like this, the panels finally in the correct order
     //I mean it. dont mess with them
-    addTopPanel();  //Add the top panel - game mode buttons and board size label
-    addPlayerPanel();  //Add Blue player panel
-    addPlayerPanel2();  //Add Red player panel
-    initializeBoard();  //Add the initial game board
+    addTopPanel();  //add the top panel - game mode buttons and board size label
+    addPlayerPanel();  //add Blue player panel
+    addPlayerPanel2();  //add Red player panel
+    initializeBoard();  //add the initial game board
 
     frame.setLocationRelativeTo(null);  //center the frame
-    frame.setVisible(true);  //show the frame
+    frame.setVisible(true);  //show the frame-- IMPORTANT!!
     }
 
     private void addTopPanel() {
@@ -85,9 +83,10 @@ public class UI {
     }
 
     //THIS will need to change to different game logic- maybe extends gameboard??
+    //as of 10/29/24 is working without needing to change, logic handled in game modes?
     void updateGameMode(int size, String mode) { //made package-private for testing - int size used to be parameter
   
-        frame.remove(boardPanel);  //remove old board
+        frame.remove(boardPanel);  //remove old board - will this help with game finishing??
         //if function, for selection of general vs simple??
         
         if (mode.equals("Simple Game")) {
@@ -222,7 +221,7 @@ public class UI {
         return ' ';  //same as above
     }
 
-//getters for testing
+//getters for testing - gpt generated b/c "boiler plate code"
 public JLabel getBoardSizeLabel() {
     return boardSizeLabel;
 }
@@ -239,7 +238,6 @@ public GameBoard getGameBoard() {
     return gameBoard;
 }
 
-
 public GameController getGameController() {
     return gameController;
 }
@@ -251,8 +249,6 @@ public JRadioButton getSButton() {
 public JRadioButton getOButton() {
     return oButton;
 }
-
-
 
 public JRadioButton getSButton2() {
     return sButton2;

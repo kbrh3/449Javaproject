@@ -1,5 +1,5 @@
 package com.example;
-//Simple Game
+//Simple Game rules from assignment
 //the game ends as soon as the first SOS is formed. done 10/23/24
 //The player who forms the first SOS wins the game. done 10/23/24
 //if no SOS is created and the board is full, the game ends in a draw.
@@ -21,7 +21,8 @@ public class SimpleGame implements GameMode {
 
     @Override
     public boolean makeMove(int row, int col, char letter, char player) {
-        //check move valid before doing anything
+        //check move valid before doing anything - something isn't working here, test is throwing wrong issue
+        //fixed 10/29/24
         if (!isValidMove(row, col)) {
             return false;
         }
@@ -34,10 +35,10 @@ public class SimpleGame implements GameMode {
             } 
             //check if o complete an sos
             else if (letter == 'O') {
-                sosFormed = checkOPlacement(row, col);  // removed player parameter
+                sosFormed = checkOPlacement(row, col);  
             }
 
-            
+            //this needs to be fixed! gameboard needs to reset here
             if (sosFormed) {
                 winningPlayer = player;
                 //this isnt reseting the gameboard.
@@ -63,7 +64,7 @@ public class SimpleGame implements GameMode {
     }
 
     private boolean isValidSOS(int row, int col, char playerMark) {
-        //check all 8 possible directions for sos
+        //check all 8 possible directions for sos - copied from other similar functions used
         int[][] directions = {
             {0, 1},   //right
             {1, 0},   //down
@@ -81,7 +82,7 @@ public class SimpleGame implements GameMode {
             int r2 = row + 2 * dir[0];
             int c2 = col + 2 * dir[1];
 
-            //check if positions exist on board
+            //check if positions exist
             if (isValidPosition(r1, c1) && isValidPosition(r2, c2)) {
                 //check for o in middle and s at end
                 if (gameBoard.getValueAt(r1, c1) == 'O' && 
@@ -129,7 +130,8 @@ public class SimpleGame implements GameMode {
     @Override
     public String getWinner() {
         if (sosFormed) {
-            //return winner based on who made the winning sos
+            //logic here was backwards, but is fixed now. right player returns 10/28/24
+            //return winner from 1st sos found
             return winningPlayer == 'B' ? "Red Player Wins!" : "Blue Player Wins!";
         }
         if (gameBoard.isFull()) {
@@ -140,7 +142,7 @@ public class SimpleGame implements GameMode {
 
     @Override
     public boolean checkGameOver(int row, int col) {
-        //game ends if sos is formed or board is full
+        //game should end if sos formed or board full
         return sosFormed || gameBoard.isFull();
     }
 

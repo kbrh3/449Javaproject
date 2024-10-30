@@ -29,7 +29,7 @@ public class GameBoard {
     public boolean setMove(int row, int col, char letter, char player) {
         // Add boundary checking before accessing array
         if (row < 0 || row >= size || col < 0 || col >= size) {
-            return false;  // Return false for out-of-bounds moves
+            return false;  //false if out-of-bounds moves
         }
         
         if (grid[row][col] == ' ' && moves[row][col] == ' ') {
@@ -86,7 +86,7 @@ public class GameBoard {
     }
 
     public char getMove(int x, int y) {
-        return grid[x][y]; //Return player character at position
+        return grid[x][y]; //return player character at position
     }
 
     public int getSize() {

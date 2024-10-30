@@ -1,5 +1,5 @@
 package com.example;
-//general game:
+//general game rules from assignment
 //the game continues until the entire board is filled
 //the winner is the player who has formed the most sos sequences by the time the board is full
 //if both players have created the same number of sos's, the game is a draw
@@ -74,7 +74,7 @@ private void incrementPoints() {
 }
 
 public String getWinner() {
-    //compare points to get winner
+    //compare points to get winner - this logic was backwards but is now fixed :)
     if (player1points > player2points) {
         return String.format("Player 1 wins! (Blue: %d, Red: %d)", 
                            player1points, player2points);
@@ -108,7 +108,7 @@ private boolean isValidSOS(int row, int col, char playerMark) {
         int r2 = row + 2 * dir[0];
         int c2 = col + 2 * dir[1];
 
-        //check if positions are on board
+        //check if positions on board
         if (isValidPosition(r1, c1) && isValidPosition(r2, c2)) {
             //look for o in middle and s at end w/ matching colors
             if (gameBoard.getValueAt(r1, c1) == 'O' && 
@@ -206,7 +206,7 @@ public char getPlayer2Choice() {
     return player2Choice;
 }
 
-//get current point totals
+//gets current point totals
 public int getPlayer1Points() {
     return player1points;
 }

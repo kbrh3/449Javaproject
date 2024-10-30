@@ -12,8 +12,10 @@ public interface GameMode {
     public char getPlayer2Choice();             //p2 choice getter
     /*Still need
      * 1. add the line to go across sos's
-     * 2. count points in general game
-     * 3. tests for all functions 
+     * 2. count points in general game - done?? 10/26/24 but may have issues
+     * 3. tests for all functions - done 10/28/24
      * 4. double check all game logic
+     * 5. gameboards should reset after game completed
+     * 6. AI player - this is due for sprint 4
      */
 }

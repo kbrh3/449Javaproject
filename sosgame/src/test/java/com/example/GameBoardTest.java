@@ -7,11 +7,11 @@ import org.junit.jupiter.api.Test;
 
 public class GameBoardTest {
     private GameBoard gameBoard;
-    private static final int TEST_SIZE = 3;
+    private static final int testSize = 3;
 
     @BeforeEach
     void setUp() {
-        gameBoard = new GameBoard(TEST_SIZE);
+        gameBoard = new GameBoard(testSize);
     }
 
     @Test
@@ -26,7 +26,7 @@ public class GameBoardTest {
 
     @Test
     void testGetSize() {
-        assertEquals(TEST_SIZE, gameBoard.getSize(),
+        assertEquals(testSize, gameBoard.getSize(),
             "Board size should match constructor parameter");
     }
 
@@ -50,8 +50,8 @@ public class GameBoardTest {
     @Test
     void testBoardFullCheck() {
         // Fill the board
-        for (int i = 0; i < TEST_SIZE; i++) {
-            for (int j = 0; j < TEST_SIZE; j++) {
+        for (int i = 0; i < testSize; i++) {
+            for (int j = 0; j < testSize; j++) {
                 gameBoard.setMove(i, j, 'S', 'B');
             }
         }
@@ -111,7 +111,7 @@ public class GameBoardTest {
 
     @Test
     void testOutOfBoundsMoves() {
-        assertFalse(gameBoard.setMove(TEST_SIZE, TEST_SIZE, 'S', 'B'),
+        assertFalse(gameBoard.setMove(testSize, testSize, 'S', 'B'),
             "Move outside board should return false");
     }
 

@@ -3,18 +3,19 @@ package com.example;
 public class GameController {
     private GameMode currentGameMode;  
     private GameBoard gameBoard;
+
     public GameController(GeneralGame ggame) {
         this.gameBoard = ggame.getGameBoard(); //gameboard from general game
         this.currentGameMode = ggame;
     }
 
     public GameController(SimpleGame sgame) {
-        this.gameBoard = sgame.getGameBoard();  //get gameboard from SimpleGame
+        this.gameBoard = sgame.getGameBoard();  //gameboard from SimpleGame
         this.currentGameMode = sgame;
     }
 
 
-//get the current player choice
+//get current player choice
 public char getCurrentPlayerChoice() {
     return currentGameMode.getCurrentPlayerChoice(); 
 }
