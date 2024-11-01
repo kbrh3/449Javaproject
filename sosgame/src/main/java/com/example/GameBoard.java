@@ -2,14 +2,14 @@ package com.example;
 
 public class GameBoard {
     private char[][] grid; //change grid to a char array??
-    private char[][] moves;  //stores 'B' (blue) or 'R' (red) - check to make sure this works 10/20/24
+    private char[][] moves;  //stores 'B' (blue) or 'R' (red) - check to make sure this works 10/20/24- works 10/24/24
     private final int size; //variable for dynamic sizing - may not need this
 
     public boolean isFull() {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 if (grid[i][j] == ' ') { 
-                    return false; //any cell is empty is not full, end it here
+                    return false; //any cell is empty, end it here
                 }
             }
         }
@@ -27,7 +27,7 @@ public class GameBoard {
     //this may have a version in controller, make sure we are using the right one
     //place a move and track the player who made it ('B' for blue, 'R' for red) - not done yet, may not need
     public boolean setMove(int row, int col, char letter, char player) {
-        // Add boundary checking before accessing array
+        //add boundary checking before...
         if (row < 0 || row >= size || col < 0 || col >= size) {
             return false;  //false if out-of-bounds moves
         }
@@ -72,8 +72,8 @@ public class GameBoard {
     private void initializeBoard() {
         for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {
-                grid[row][col] = ' '; //Use space ' ', empty cell
-                moves[row][col] = ' ';  //No player move
+                grid[row][col] = ' '; //use space ' ', empty cell
+                moves[row][col] = ' ';  //no player move
             }
         }
     }

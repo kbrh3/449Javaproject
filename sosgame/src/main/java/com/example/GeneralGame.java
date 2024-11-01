@@ -26,12 +26,12 @@ public class GeneralGame implements GameMode{
 
     @Override
 public boolean makeMove(int row, int col, char letter, char player) {
-    //check if move allowed
+    //check move allowed
     if (!isValidMove(row, col)) {
         return false;
     }
 
-    //set current player based on color
+    //set current player from color- this fixed the problem!!
     if (player == bluePlayer) {
         isPlayerOneTurn = true;
     } else if (player == redPlayer) {

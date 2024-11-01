@@ -2,7 +2,7 @@ package com.example;
 //Simple Game rules from assignment
 //the game ends as soon as the first SOS is formed. done 10/23/24
 //The player who forms the first SOS wins the game. done 10/23/24
-//if no SOS is created and the board is full, the game ends in a draw.
+//if no SOS is created and the board is full, the game ends in a draw. 10/27/24
 //this one can use the same switch function I implimented before, but for general that will need to change.
 
 public class SimpleGame implements GameMode {
@@ -95,7 +95,8 @@ public class SimpleGame implements GameMode {
     }
 
     private boolean checkOPlacement(int row, int col) {
-        //check all 4 possible sos patterns through this o
+        //check all 4 possible sos patterns through this 
+
         int[][] sPositions = {
             {-1, -1, 1, 1},   //diagonal
             {-1, 1, 1, -1},   //other diagonal
@@ -131,7 +132,8 @@ public class SimpleGame implements GameMode {
     public String getWinner() {
         if (sosFormed) {
             //logic here was backwards, but is fixed now. right player returns 10/28/24
-            //return winner from 1st sos found
+            //return winner from 1st sos found - i think the logic twists the two around, but the end is fine so 
+            //i am going to leave it alone 
             return winningPlayer == 'B' ? "Red Player Wins!" : "Blue Player Wins!";
         }
         if (gameBoard.isFull()) {

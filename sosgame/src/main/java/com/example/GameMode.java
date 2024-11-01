@@ -14,8 +14,8 @@ public interface GameMode {
      * 1. add the line to go across sos's
      * 2. count points in general game - done?? 10/26/24 but may have issues
      * 3. tests for all functions - done 10/28/24
-     * 4. double check all game logic
-     * 5. gameboards should reset after game completed
+     * 4. double check all game logic 10/31/24
+     * 5. gameboards should reset after game completed 11/1/24
      * 6. AI player - this is due for sprint 4
      */
 }

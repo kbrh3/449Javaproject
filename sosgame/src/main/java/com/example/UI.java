@@ -198,6 +198,8 @@ public class UI {
         if (currentGameMode.checkGameOver(row, col)) {
             String winner = currentGameMode.getWinner();
             JOptionPane.showMessageDialog(frame, winner);
+            //this should make the board reset after a game is won
+            updateGameMode(8, "Simple Game");
         }
         }
     }
