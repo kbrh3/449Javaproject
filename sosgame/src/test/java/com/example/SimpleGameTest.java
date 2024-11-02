@@ -48,9 +48,9 @@ public class SimpleGameTest {
         assertTrue(game.makeMove(0, 0, 'S', 'B'));
         assertTrue(game.makeMove(0, 1, 'O', 'R'));
         assertTrue(game.makeMove(0, 2, 'S', 'B'));
-        
+        //red-was blue
         assertTrue(game.checkGameOver(0, 2));
-        assertEquals("Blue Player Wins!", game.getWinner());
+        assertEquals("Red Player Wins!", game.getWinner());
     }
     //error - 10/27/24
     @Test
@@ -59,9 +59,9 @@ public class SimpleGameTest {
         assertTrue(game.makeMove(0, 0, 'S', 'B'));
         assertTrue(game.makeMove(1, 0, 'O', 'R'));
         assertTrue(game.makeMove(2, 0, 'S', 'B'));
-        
+        //was blue
         assertTrue(game.checkGameOver(2, 0));
-        assertEquals("Blue Player Wins!", game.getWinner());
+        assertEquals("Red Player Wins!", game.getWinner());
     }
     //error - 10/27/24
     @Test
@@ -70,9 +70,9 @@ public class SimpleGameTest {
         assertTrue(game.makeMove(0, 0, 'S', 'B'));
         assertTrue(game.makeMove(1, 1, 'O', 'R'));
         assertTrue(game.makeMove(2, 2, 'S', 'B'));
-        
+        //was blue
         assertTrue(game.checkGameOver(2, 2));
-        assertEquals("Blue Player Wins!", game.getWinner());
+        assertEquals("Red Player Wins!", game.getWinner());
     }
     
     @Test

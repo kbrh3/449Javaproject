@@ -200,6 +200,7 @@ public class UI {
             JOptionPane.showMessageDialog(frame, winner);
             //this should make the board reset after a game is won
             updateGameMode(8, "Simple Game");
+            simpleGameButton.setSelected(true);
         }
         }
     }
