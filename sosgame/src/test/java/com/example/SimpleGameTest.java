@@ -115,4 +115,5 @@ public class SimpleGameTest {
         assertNotNull(game.getGameBoard());
         assertEquals(BOARD_SIZE, game.getGameBoard().getSize());
     }
+    
 }

@@ -121,7 +121,7 @@ void testValidMoveGeneralGame() {
     assertFalse(controller.isPlayerOneTurn(), "Turn should switch after valid move");
     assertEquals('O', controller.getCurrentPlayerChoice(), "Should be player two's choice");
 }
-    //error - 10/27/24
+    //error - 10/27/24 (fixed)
     @Test
     void testInvalidMoveSimpleGame() {
         GameController controller = new GameController(simpleGame);
@@ -150,4 +150,17 @@ void testValidMoveGeneralGame() {
         assertEquals('S', controller.getGameBoard().getValueAt(0, 0), "GameBoard should reflect the move");
         assertEquals(controller.getGameBoard(), simpleGame.getGameBoard(), "GameBoard reference should be consistent");
     }
+
+    @Test
+    void testExtraTurnAfterSOSGeneralGame() {
+        GameController controller = new GameController(generalGame);
+    
+    //player 1 makes an sos horizontally
+    controller.makeMove(0, 0, 'S', 'B');
+    controller.makeMove(0, 1, 'O', 'B');
+    controller.makeMove(0, 2, 'S', 'B'); // Completes an SOS
+    
+    assertTrue(controller.isPlayerOneTurn(), "Player 1 should get an extra turn after forming an SOS.");
+}
+
 }

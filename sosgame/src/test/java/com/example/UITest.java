@@ -124,4 +124,6 @@ public class UITest {
         assertNotNull(ui.getGameBoard(), "Game board should not be null");
         assertEquals(10, ui.getGameBoard().getSize(), "General Game board should be 10x10");
     }
+
+
 }

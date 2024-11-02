@@ -56,11 +56,11 @@ public class GeneralGameTest {
 
     @Test
     void testNoPointsForMixedColorSOS() {
-        // Blue places first S
+        //blue should place s first
         game.makeMove(0, 0, 'S', 'B');
-        // Red places O
+        //red makes the o
         game.makeMove(0, 1, 'O', 'R');
-        // Blue places final S
+        //blue makes another s
         game.makeMove(0, 2, 'S', 'B');
         
         assertEquals(0, game.getPlayer1Points(), "No points for mixed color SOS");
@@ -139,4 +139,41 @@ public class GeneralGameTest {
         
         assertEquals(2, game.getPlayer1Points(), "Player should have 2 points for 2 SOSs");
     }
+    @Test
+   public void testSOSFormationHorizontal() {
+    // Create horizontal SOS and verify points
+    assertTrue(game.makeMove(0, 0, 'S', 'B'), "First S should be valid");
+    assertTrue(game.makeMove(0, 1, 'O', 'B'), "O should be valid");
+    assertTrue(game.makeMove(0, 2, 'S', 'B'), "Final S should be valid");
+    
+    assertEquals(1, game.getPlayer1Points(), "Blue player should get 1 point");
+    assertTrue(game.isPlayerOneTurn(), "Blue player should get another turn after SOS");
+}
+
+
+
+@Test
+    public void testSOSFormationVertical() {
+    // Create vertical SOS and verify points
+    assertTrue(game.makeMove(0, 0, 'S', 'B'), "First S should be valid");
+    assertTrue(game.makeMove(1, 0, 'O', 'B'), "O should be valid");
+    assertTrue(game.makeMove(2, 0, 'S', 'B'), "Final S should be valid");
+    
+    assertEquals(1, game.getPlayer1Points(), "Blue player should get 1 point");
+    assertTrue(game.isPlayerOneTurn(), "Blue player should get another turn after SOS");
+}
+
+    @Test
+    public void testSOSFormationDiagonal() {
+    // Create diagonal SOS and verify points
+    assertTrue(game.makeMove(0, 0, 'S', 'B'), "First S should be valid");
+    assertTrue(game.makeMove(1, 1, 'O', 'B'), "O should be valid");
+    assertTrue(game.makeMove(2, 2, 'S', 'B'), "Final S should be valid");
+    
+    assertEquals(1, game.getPlayer1Points(), "Blue player should get 1 point");
+    assertTrue(game.isPlayerOneTurn(), "Blue player should get another turn after SOS");
+}
+
+
+
 }
