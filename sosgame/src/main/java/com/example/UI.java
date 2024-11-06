@@ -8,6 +8,7 @@ import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
@@ -26,6 +27,8 @@ public class UI {
     private JPanel boardPanel;  //panel holding game board
     private JRadioButton simpleGameButton, generalGameButton;  //game mode buttons
     private JPanel gameModePanel;  //panel for game mode selection
+    private JRadioButton blueHuman, blueComputer; //these are here for sprint 4 - ai players
+    private JRadioButton redHuman, redComputer;
 
     public UI() {
         gameController = new GameController(new SimpleGame(8));  //Init the game controller w/ size 8x8
@@ -116,6 +119,40 @@ public class UI {
         sButton = new JRadioButton("S", true);  //default selection to s
         oButton = new JRadioButton("O");
 
+        JPanel typePanel = new JPanel();
+        typePanel.setLayout(new BoxLayout(typePanel, BoxLayout.Y_AXIS));
+        typePanel.setBorder(BorderFactory.createTitledBorder("Player Type"));
+        
+        blueHuman = new JRadioButton("Human", true);
+        blueComputer = new JRadioButton("Computer");
+
+        ButtonGroup typeGroup = new ButtonGroup();
+        typeGroup.add(blueHuman);
+        typeGroup.add(blueComputer);
+        
+        typePanel.add(blueHuman);
+        typePanel.add(blueComputer);
+
+        //listeners for the computer vs person buttons
+
+        blueHuman.addActionListener(e -> {
+           // bluePlayer = new HumanPlayer("Blue"); - these come from player class ideas, change is needed
+            //should keep the buttons available for human players
+            //sButton.setEnabled(true);
+           // oButton.setEnabled(true);
+        });
+
+        blueComputer.addActionListener(e -> {
+           // bluePlayer = new ComputerPlayer("Blue");
+            // Disable buttons for people players
+            //sButton.setEnabled(false);
+            //oButton.setEnabled(false);
+        });
+
+        JPanel choicePanel = new JPanel();
+        choicePanel.setLayout(new BoxLayout(choicePanel, BoxLayout.Y_AXIS));
+        
+
         ButtonGroup group = new ButtonGroup();  //group radio buttons to allow only one selection
         group.add(sButton);
         group.add(oButton);
@@ -126,30 +163,70 @@ public class UI {
         sButton.addActionListener(e -> currentGameMode.setPlayer1Choice('S'));
         oButton.addActionListener(e -> currentGameMode.setPlayer1Choice('O'));
 
-        playerPanel.setPreferredSize(new Dimension(200, frame.getHeight()));  //set panel size
-        frame.add(playerPanel, BorderLayout.WEST);  //add player panel to the frame
+        playerPanel.add(typePanel);
+        playerPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Add spacing
+        playerPanel.add(choicePanel);
+
+        playerPanel.setPreferredSize(new Dimension(200, frame.getHeight()));
+        frame.add(playerPanel, BorderLayout.WEST);
     }
 
     private void addPlayerPanel2() {
         JPanel playerPanel = new JPanel();
         playerPanel.setLayout(new BoxLayout(playerPanel, BoxLayout.Y_AXIS));
         playerPanel.setBorder(BorderFactory.createTitledBorder("Red player"));
-
-        sButton2 = new JRadioButton("S", true);  //default selection
+    
+        sButton2 = new JRadioButton("S", true);  //default selection to s
         oButton2 = new JRadioButton("O");
-
-        ButtonGroup group = new ButtonGroup();  //group radio buttons
+    
+        JPanel typePanel = new JPanel();
+        typePanel.setLayout(new BoxLayout(typePanel, BoxLayout.Y_AXIS));
+        typePanel.setBorder(BorderFactory.createTitledBorder("Player Type"));
+        
+        redHuman = new JRadioButton("Human", true);
+        redComputer = new JRadioButton("Computer");
+    
+        ButtonGroup typeGroup = new ButtonGroup();
+        typeGroup.add(redHuman);
+        typeGroup.add(redComputer);
+        
+        typePanel.add(redHuman);
+        typePanel.add(redComputer);
+    
+        //listeners for the computer vs person buttons
+        redHuman.addActionListener(e -> {
+            // redPlayer = new HumanPlayer("Red"); - these come from player class ideas, change is needed
+            //should keep the buttons available for human players
+            //sButton2.setEnabled(true);
+            //oButton2.setEnabled(true);
+        });
+    
+        redComputer.addActionListener(e -> {
+            // redPlayer = new ComputerPlayer("Red");
+            // Disable buttons for computer players
+            //sButton2.setEnabled(false);
+            //oButton2.setEnabled(false);
+        });
+    
+        JPanel choicePanel = new JPanel();
+        choicePanel.setLayout(new BoxLayout(choicePanel, BoxLayout.Y_AXIS));
+    
+        ButtonGroup group = new ButtonGroup();  //group radio buttons to allow only one selection
         group.add(sButton2);
         group.add(oButton2);
-
+    
         playerPanel.add(sButton2);
         playerPanel.add(oButton2);
-
+    
         sButton2.addActionListener(e -> currentGameMode.setPlayer2Choice('S'));
         oButton2.addActionListener(e -> currentGameMode.setPlayer2Choice('O'));
-
-        playerPanel.setPreferredSize(new Dimension(200, frame.getHeight()));  //set panel size
-        frame.add(playerPanel, BorderLayout.EAST);  //add player panel to the frame
+    
+        playerPanel.add(typePanel);
+        playerPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Add spacing
+        playerPanel.add(choicePanel);
+    
+        playerPanel.setPreferredSize(new Dimension(200, frame.getHeight()));
+        frame.add(playerPanel, BorderLayout.EAST);
     }
 
     private void initializeBoard() {
