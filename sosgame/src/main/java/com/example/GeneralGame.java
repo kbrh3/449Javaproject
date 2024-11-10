@@ -52,14 +52,13 @@ public boolean makeMove(int row, int col, char letter, char player) {
         //if sos was made, add points and keep turn
         if (sosFormed) {
             incrementPoints();
-            return true;
         } else {
             //no sos,switch turns
             togglePlayerTurn();
-            return true;
         }
+        return true; //valid and placed 
     }
-    return false;
+    return false; //invalid and not places
 }
 
 private void incrementPoints() {
@@ -67,6 +66,7 @@ private void incrementPoints() {
     if (isPlayerOneTurn) {
         player1points++;
         System.out.println("Blue player points now: " + player1points);
+        //for debugging
     } else {
         player2points++;
         System.out.println("Red player points now: " + player2points);
@@ -76,10 +76,10 @@ private void incrementPoints() {
 public String getWinner() {
     //compare points to get winner - this logic was backwards but is now fixed :)
     if (player1points > player2points) {
-        return String.format("Player 1 wins! (Blue: %d, Red: %d)", 
+        return String.format("Blue player wins! (Blue: %d, Red: %d)", 
                            player1points, player2points);
     } else if (player2points > player1points) {
-        return String.format("Player 2 wins! (Red: %d, Blue: %d)", 
+        return String.format("Red player wins! (Red: %d, Blue: %d)", 
                            player2points, player1points);
     } else {
         return String.format("It's a draw! (Both: %d)", player1points);

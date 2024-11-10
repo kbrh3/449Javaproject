@@ -15,7 +15,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import java.awt.Component;
-
+//maybe add a point counter for general game??
 public class UI {
 
     private JFrame frame;
@@ -25,6 +25,7 @@ public class UI {
     private JRadioButton sButton2, oButton2;  //radio buttons for red player
     JLabel boardSizeLabel;  //display board size
     private GameController gameController;  
+    private JLabel turnDisplay;
     private JPanel boardPanel;  //panel holding game board
     private JRadioButton simpleGameButton, generalGameButton;  //game mode buttons
     private JPanel gameModePanel;  //panel for game mode selection
@@ -62,15 +63,21 @@ public class UI {
     //a display should help with knowing what is going on
     //impliment this soon
     private void updateTurnDisplay() {
-    String playerType = (gameController.isPlayerOneTurn() ? 
-        (bluePlayer.isComputer() ? "Computer (Blue)" : "Human (Blue)") :
-        (redPlayer.isComputer() ? "Computer (Red)" : "Human (Red)"));
-    // Update a label showing current turn
+    String currentPlayer = gameController.isPlayerOneTurn() ? "Blue" : "Red";
+    turnDisplay.setText(currentPlayer + " Players Turn");
     }
 
     private void addTopPanel() {
         JPanel topPanel = new JPanel(new BorderLayout());  //parent container panel
-    
+        
+        //try centering w/ FlowLayout.CENTER
+        JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        turnDisplay = new JLabel("Blue Players Turn");
+        turnDisplay.setHorizontalAlignment(JLabel.CENTER);  // Center the text
+        turnDisplay.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));  // Match the padding of boardSizeLabel
+        centerPanel.add(turnDisplay);
+        topPanel.add(centerPanel, BorderLayout.CENTER);
+
         //game mode panel (Simple/General Game), keep on the left
         gameModePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         simpleGameButton = new JRadioButton("Simple Game", true);  //default selection to simple
@@ -98,7 +105,6 @@ public class UI {
         //add the top panel to frame
         frame.add(topPanel, BorderLayout.NORTH);
     }
-
     //THIS will need to change to different game logic- maybe extends gameboard??
     //as of 10/29/24 is working without needing to change, logic handled in game modes?
     void updateGameMode(int size, String mode) { //made package-private for testing - int size used to be parameter
@@ -118,7 +124,8 @@ public class UI {
     
         //update the board size label w/ new mode & size - maybe this should come from game mode??
         boardSizeLabel.setText(mode + " - Board Size: " + size + "x" + size);
-    
+        updateTurnDisplay();
+
         //reinit the board
         initializeBoard();
         frame.revalidate();
@@ -271,24 +278,24 @@ public class UI {
     }
 
     //computer turn helper. this had gpt assistance, it was hard to figure out
-private void handleComputerTurn() {
+    private void handleComputerTurn() {
     boolean isPlayerOneTurn = gameController.isPlayerOneTurn();
     Player currentPlayer = isPlayerOneTurn ? bluePlayer : redPlayer;
     
-    if (currentPlayer.isComputer()) {
+        if (currentPlayer.isComputer()) {
         //suggested delay to make computer moves visible to players
-        javax.swing.Timer timer = new javax.swing.Timer(500, e -> {
+            javax.swing.Timer timer = new javax.swing.Timer(500, e -> {
             int[] move = currentPlayer.getComputerMove(gameBoard);
-            if (move != null) {
-                char symbol = currentPlayer.getComputerSymbol();
-                char player = isPlayerOneTurn ? 'B' : 'R';
+                if (move != null) {
+                    char symbol = currentPlayer.getComputerSymbol();
+                    char player = isPlayerOneTurn ? 'B' : 'R';
                 
-                if (gameController.makeMove(move[0], move[1], symbol, player)) {
+                    if (gameController.makeMove(move[0], move[1], symbol, player)) {
                     //find + update the correct cell. component b/c we are using jlabels
-                    Component[] components = boardPanel.getComponents();
-                    JLabel cell = (JLabel) components[move[0] * gameBoard.getSize() + move[1]];
-                    cell.setText(String.valueOf(symbol));
-                    cell.setForeground(isPlayerOneTurn ? Color.BLUE : Color.RED);
+                        Component[] components = boardPanel.getComponents();
+                        JLabel cell = (JLabel) components[move[0] * gameBoard.getSize() + move[1]];
+                        cell.setText(String.valueOf(symbol));
+                        cell.setForeground(isPlayerOneTurn ? Color.BLUE : Color.RED);
 
                     if (currentGameMode.checkGameOver(move[0], move[1])) {
                         String winner = currentGameMode.getWinner();
@@ -298,6 +305,7 @@ private void handleComputerTurn() {
                     } else {
                         //if next player is also computer. shouldn't be but just in case
                         handleComputerTurn();
+                        updateTurnDisplay(); 
                     }
                 }
             }
@@ -328,13 +336,14 @@ private void handleComputerTurn() {
                 } else {
                     // After human move, check if next player is computer
                     handleComputerTurn();
+                    updateTurnDisplay(); 
                 }
             }
         }
     }
     
     private char getchoicePlayer1() {
-        if (sButton.isSelected()) {
+         if (sButton.isSelected()) {
             return 'S';
         } else if (oButton.isSelected()) {
             return 'O';
@@ -353,41 +362,41 @@ private void handleComputerTurn() {
     }
 
 //getters for testing - gpt generated b/c "boiler plate code"
-public JLabel getBoardSizeLabel() {
-    return boardSizeLabel;
-}
+    public JLabel getBoardSizeLabel() {
+        return boardSizeLabel;
+    }
 
-public JRadioButton getSimpleGameButton() {
-    return simpleGameButton;
-}
+    public JRadioButton getSimpleGameButton() {
+     return simpleGameButton;
+    }   
 
-public JRadioButton getGeneralGameButton() {
-    return generalGameButton;
-}
+    public JRadioButton getGeneralGameButton() {
+        return generalGameButton;
+    }
 
-public GameBoard getGameBoard() {
-    return gameBoard;
-}
+    public GameBoard getGameBoard() {
+        return gameBoard;
+    }
 
-public GameController getGameController() {
-    return gameController;
-}
+    public GameController getGameController() {
+        return gameController;
+    }  
 
-public JRadioButton getSButton() {
-    return sButton;
-}
+    public JRadioButton getSButton() {
+         return sButton;
+    }
 
-public JRadioButton getOButton() {
-    return oButton;
-}
+    public JRadioButton getOButton() {
+     return oButton;
+    }
 
-public JRadioButton getSButton2() {
-    return sButton2;
-}
+    public JRadioButton getSButton2() {
+     return sButton2;
+    }
 
-public JRadioButton getOButton2() {
-    return oButton2;
-}
+    public JRadioButton getOButton2() {
+        return oButton2;
+    }
 
 
 }

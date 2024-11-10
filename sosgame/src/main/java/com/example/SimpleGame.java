@@ -21,34 +21,29 @@ public class SimpleGame implements GameMode {
 
     @Override
     public boolean makeMove(int row, int col, char letter, char player) {
-        //check move valid before doing anything - something isn't working here, test is throwing wrong issue
-        //fixed 10/29/24
         if (!isValidMove(row, col)) {
             return false;
         }
-
-        //try to make move
+        
+        //player turn setting based on color
+        if (player == 'B') {
+            isPlayerOneTurn = true;
+        } else if (player == 'R') {
+            isPlayerOneTurn = false;
+        }
+    
         if (gameBoard.setMove(row, col, letter, player)) {
-            //check if s completes an sos
             if (letter == 'S') {
                 sosFormed = isValidSOS(row, col, player);
             } 
-            //check if o complete an sos
             else if (letter == 'O') {
-                sosFormed = checkOPlacement(row, col);  
+                sosFormed = checkOPlacement(row, col, player);  // Pass player here
             }
-
-            //this needs to be fixed! gameboard needs to reset here
+    
             if (sosFormed) {
                 winningPlayer = player;
-                //this isnt reseting the gameboard.
-                //gameController = new GameController(new SimpleGame(8));
                 gameBoard = new GameBoard(size);
-                //currentGameMode = gameController.getGameMode();
-                
-                
             } else {
-                //no sos so switch turns
                 togglePlayerTurn();
             }
             return true;
@@ -64,7 +59,7 @@ public class SimpleGame implements GameMode {
     }
 
     private boolean isValidSOS(int row, int col, char playerMark) {
-        //check all 8 possible directions for sos - copied from other similar functions used
+        //check all 8 possible directions for sos
         int[][] directions = {
             {0, 1},   //right
             {1, 0},   //down
@@ -75,18 +70,20 @@ public class SimpleGame implements GameMode {
             {-1, -1}, //diagonal up-left
             {-1, 1}   //diagonal up-right
         };
-
+    
         for (int[] dir : directions) {
             int r1 = row + dir[0];
             int c1 = col + dir[1];
             int r2 = row + 2 * dir[0];
             int c2 = col + 2 * dir[1];
-
+    
             //check if positions exist
             if (isValidPosition(r1, c1) && isValidPosition(r2, c2)) {
-                //check for o in middle and s at end
+                //check for o in middle and s at end WITH player color matching
                 if (gameBoard.getValueAt(r1, c1) == 'O' && 
-                    gameBoard.getValueAt(r2, c2) == 'S') {
+                    gameBoard.getValueAt(r2, c2) == 'S' &&
+                    gameBoard.checkplayer(r1, c1) == playerMark &&
+                    gameBoard.checkplayer(r2, c2) == playerMark) {
                     return true;
                 }
             }
@@ -94,27 +91,28 @@ public class SimpleGame implements GameMode {
         return false;
     }
 
-    private boolean checkOPlacement(int row, int col) {
+    private boolean checkOPlacement(int row, int col, char playerMark) { // Add playerMark parameter
         //check all 4 possible sos patterns through this 
-
         int[][] sPositions = {
             {-1, -1, 1, 1},   //diagonal
             {-1, 1, 1, -1},   //other diagonal
             {-1, 0, 1, 0},    //vertical
             {0, -1, 0, 1}     //horizontal
         };
-
+    
         for (int[] pos : sPositions) {
             int r1 = row + pos[0];
             int c1 = col + pos[1];
             int r2 = row + pos[2];
             int c2 = col + pos[3];
-
+    
             //check if positions exist on board
             if (isValidPosition(r1, c1) && isValidPosition(r2, c2)) {
-                //check if there are s letters at both ends
+                //check if there are s letters at both ends WITH player color matching
                 if (gameBoard.getValueAt(r1, c1) == 'S' && 
-                    gameBoard.getValueAt(r2, c2) == 'S') {
+                    gameBoard.getValueAt(r2, c2) == 'S' &&
+                    gameBoard.checkplayer(r1, c1) == playerMark &&
+                    gameBoard.checkplayer(r2, c2) == playerMark) {
                     return true;
                 }
             }
@@ -134,7 +132,7 @@ public class SimpleGame implements GameMode {
             //logic here was backwards, but is fixed now. right player returns 10/28/24
             //return winner from 1st sos found - i think the logic twists the two around, but the end is fine so 
             //i am going to leave it alone 
-            return winningPlayer == 'B' ? "Red Player Wins!" : "Blue Player Wins!";
+            return winningPlayer == 'B' ? "Blue Player Wins!" : "Red Player Wins!";
         }
         if (gameBoard.isFull()) {
             return "It's a draw!";
