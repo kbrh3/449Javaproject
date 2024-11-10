@@ -14,6 +14,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import java.awt.Component;
 
 public class UI {
 
@@ -29,11 +30,15 @@ public class UI {
     private JPanel gameModePanel;  //panel for game mode selection
     private JRadioButton blueHuman, blueComputer; //these are here for sprint 4 - ai players
     private JRadioButton redHuman, redComputer;
+    private Player bluePlayer = new Player("Blue");
+    private Player redPlayer = new Player("Red");
 
     public UI() {
         gameController = new GameController(new SimpleGame(8));  //Init the game controller w/ size 8x8
         gameBoard = new GameBoard(8);  //Init the game board w/ size 8x8 b/c simple game
         currentGameMode = gameController.getGameMode(); //defaulting to simple game :)
+        bluePlayer = new Player("Blue"); //put them inside the constructor as well
+        redPlayer = new Player("Red");
         initUI();  //Init user interface
     }
 
@@ -52,6 +57,15 @@ public class UI {
 
     frame.setLocationRelativeTo(null);  //center the frame
     frame.setVisible(true);  //show the frame-- IMPORTANT!!
+    }
+
+    //a display should help with knowing what is going on
+    //impliment this soon
+    private void updateTurnDisplay() {
+    String playerType = (gameController.isPlayerOneTurn() ? 
+        (bluePlayer.isComputer() ? "Computer (Blue)" : "Human (Blue)") :
+        (redPlayer.isComputer() ? "Computer (Red)" : "Human (Red)"));
+    // Update a label showing current turn
     }
 
     private void addTopPanel() {
@@ -135,18 +149,17 @@ public class UI {
 
         //listeners for the computer vs person buttons
 
+       
         blueHuman.addActionListener(e -> {
-           // bluePlayer = new HumanPlayer("Blue"); - these come from player class ideas, change is needed
-            //should keep the buttons available for human players
-            //sButton.setEnabled(true);
-           // oButton.setEnabled(true);
+            bluePlayer.setIsComputer(false);  //human mode
+            sButton.setEnabled(true);         
+            oButton.setEnabled(true);
         });
 
         blueComputer.addActionListener(e -> {
-           // bluePlayer = new ComputerPlayer("Blue");
-            // Disable buttons for people players
-            //sButton.setEnabled(false);
-            //oButton.setEnabled(false);
+            bluePlayer.setIsComputer(true);   //computer mode
+            sButton.setEnabled(false);      
+            oButton.setEnabled(false);
         });
 
         JPanel choicePanel = new JPanel();
@@ -195,17 +208,16 @@ public class UI {
     
         //listeners for the computer vs person buttons
         redHuman.addActionListener(e -> {
-            // redPlayer = new HumanPlayer("Red"); - these come from player class ideas, change is needed
-            //should keep the buttons available for human players
-            //sButton2.setEnabled(true);
-            //oButton2.setEnabled(true);
+            redPlayer.setIsComputer(false);
+            sButton2.setEnabled(true);
+            oButton2.setEnabled(true);
         });
     
         redComputer.addActionListener(e -> {
-            // redPlayer = new ComputerPlayer("Red");
-            // Disable buttons for computer players
-            //sButton2.setEnabled(false);
-            //oButton2.setEnabled(false);
+            redPlayer.setIsComputer(true);
+            //Disable buttons
+            sButton2.setEnabled(false);
+            oButton2.setEnabled(false);
         });
     
         JPanel choicePanel = new JPanel();
@@ -257,28 +269,67 @@ public class UI {
     
         frame.add(boardPanel, BorderLayout.CENTER);  //add the board panel to frame
     }
+
+    //computer turn helper. this had gpt assistance, it was hard to figure out
+private void handleComputerTurn() {
+    boolean isPlayerOneTurn = gameController.isPlayerOneTurn();
+    Player currentPlayer = isPlayerOneTurn ? bluePlayer : redPlayer;
+    
+    if (currentPlayer.isComputer()) {
+        //suggested delay to make computer moves visible to players
+        javax.swing.Timer timer = new javax.swing.Timer(500, e -> {
+            int[] move = currentPlayer.getComputerMove(gameBoard);
+            if (move != null) {
+                char symbol = currentPlayer.getComputerSymbol();
+                char player = isPlayerOneTurn ? 'B' : 'R';
+                
+                if (gameController.makeMove(move[0], move[1], symbol, player)) {
+                    //find + update the correct cell. component b/c we are using jlabels
+                    Component[] components = boardPanel.getComponents();
+                    JLabel cell = (JLabel) components[move[0] * gameBoard.getSize() + move[1]];
+                    cell.setText(String.valueOf(symbol));
+                    cell.setForeground(isPlayerOneTurn ? Color.BLUE : Color.RED);
+
+                    if (currentGameMode.checkGameOver(move[0], move[1])) {
+                        String winner = currentGameMode.getWinner();
+                        JOptionPane.showMessageDialog(frame, winner);
+                        updateGameMode(8, "Simple Game");
+                        simpleGameButton.setSelected(true);
+                    } else {
+                        //if next player is also computer. shouldn't be but just in case
+                        handleComputerTurn();
+                    }
+                }
+            }
+        });
+        timer.setRepeats(false);
+        timer.start();
+    }
+}
    
     private void handleMove(int row, int col, JLabel cell) {
-        boolean isPlayerOneTurn = gameController.isPlayerOneTurn();  //check current turn
-        //char letter = gameController.getCurrentPlayerChoice();  //Get s or o - this was from before sprint 3
-        char letter = isPlayerOneTurn ? getchoicePlayer1() : getchoicePlayer2();
-        char player = isPlayerOneTurn ? '1' : '2';  //to help keep track of points
-
-        if (gameController.makeMove(row, col, letter, player)) {  //if the move valid
-            cell.setText(String.valueOf(letter));  //display the player choice
+        boolean isPlayerOneTurn = gameController.isPlayerOneTurn();
+        Player currentPlayer = isPlayerOneTurn ? bluePlayer : redPlayer;
+        
+        // Only process click if it's a human player's turn
+        if (!currentPlayer.isComputer()) {
+            char letter = isPlayerOneTurn ? getchoicePlayer1() : getchoicePlayer2();
+            char player = isPlayerOneTurn ? 'B' : 'R';
     
-            //set color for letters
-            cell.setForeground(isPlayerOneTurn ? Color.BLUE : Color.RED);
-
-
-            //check for game over - determine how this works with new game mode classes
-        if (currentGameMode.checkGameOver(row, col)) {
-            String winner = currentGameMode.getWinner();
-            JOptionPane.showMessageDialog(frame, winner);
-            //this should make the board reset after a game is won
-            updateGameMode(8, "Simple Game");
-            simpleGameButton.setSelected(true);
-        }
+            if (gameController.makeMove(row, col, letter, player)) {
+                cell.setText(String.valueOf(letter));
+                cell.setForeground(isPlayerOneTurn ? Color.BLUE : Color.RED);
+    
+                if (currentGameMode.checkGameOver(row, col)) {
+                    String winner = currentGameMode.getWinner();
+                    JOptionPane.showMessageDialog(frame, winner);
+                    updateGameMode(8, "Simple Game");
+                    simpleGameButton.setSelected(true);
+                } else {
+                    // After human move, check if next player is computer
+                    handleComputerTurn();
+                }
+            }
         }
     }
     
