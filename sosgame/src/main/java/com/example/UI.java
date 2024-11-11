@@ -33,6 +33,7 @@ public class UI {
     private JRadioButton redHuman, redComputer;
     private Player bluePlayer = new Player("Blue");
     private Player redPlayer = new Player("Red");
+    private boolean gameOver = false; //tracking if game is over
 
     public UI() {
         gameController = new GameController(new SimpleGame(8));  //Init the game controller w/ size 8x8
@@ -107,10 +108,9 @@ public class UI {
     }
     //THIS will need to change to different game logic- maybe extends gameboard??
     //as of 10/29/24 is working without needing to change, logic handled in game modes?
-    void updateGameMode(int size, String mode) { //made package-private for testing - int size used to be parameter
-  
-        frame.remove(boardPanel);  //remove old board - will this help with game finishing??
-        //if function, for selection of general vs simple??
+     //made package-private for testing - int size used to be parameter
+     void updateGameMode(int size, String mode) {
+        frame.remove(boardPanel);
         
         if (mode.equals("Simple Game")) {
             gameController = new GameController(new SimpleGame(8));
@@ -122,15 +122,18 @@ public class UI {
             currentGameMode = gameController.getGameMode();
         }
     
-        //update the board size label w/ new mode & size - maybe this should come from game mode??
         boardSizeLabel.setText(mode + " - Board Size: " + size + "x" + size);
         updateTurnDisplay();
-
-        //reinit the board
         initializeBoard();
+    
         frame.revalidate();
         frame.repaint();
+    
+        gameOver = false; // Reset gameOver for a new game
     }
+    
+    
+  
     
     private void addPlayerPanel() {
         JPanel playerPanel = new JPanel();
@@ -279,68 +282,106 @@ public class UI {
 
     //computer turn helper. this had gpt assistance, it was hard to figure out
     private void handleComputerTurn() {
-    boolean isPlayerOneTurn = gameController.isPlayerOneTurn();
-    Player currentPlayer = isPlayerOneTurn ? bluePlayer : redPlayer;
+        if (gameOver) {
+            System.out.println("Game is over. No more moves allowed for the computer.");
+            return; // Stop if the game has ended
+        }
     
-        if (currentPlayer.isComputer()) {
-        //suggested delay to make computer moves visible to players
-            javax.swing.Timer timer = new javax.swing.Timer(500, e -> {
-            int[] move = currentPlayer.getComputerMove(gameBoard);
-                if (move != null) {
-                    char symbol = currentPlayer.getComputerSymbol();
-                    char player = isPlayerOneTurn ? 'B' : 'R';
-                
-                    if (gameController.makeMove(move[0], move[1], symbol, player)) {
-                    //find + update the correct cell. component b/c we are using jlabels
-                        Component[] components = boardPanel.getComponents();
-                        JLabel cell = (JLabel) components[move[0] * gameBoard.getSize() + move[1]];
-                        cell.setText(String.valueOf(symbol));
-                        cell.setForeground(isPlayerOneTurn ? Color.BLUE : Color.RED);
-
-                    if (currentGameMode.checkGameOver(move[0], move[1])) {
-                        String winner = currentGameMode.getWinner();
-                        JOptionPane.showMessageDialog(frame, winner);
-                        updateGameMode(8, "Simple Game");
-                        simpleGameButton.setSelected(true);
-                    } else {
-                        //if next player is also computer. shouldn't be but just in case
-                        handleComputerTurn();
-                        updateTurnDisplay(); 
-                    }
-                }
-            }
-        });
-        timer.setRepeats(false);
-        timer.start();
-    }
-}
-   
-    private void handleMove(int row, int col, JLabel cell) {
         boolean isPlayerOneTurn = gameController.isPlayerOneTurn();
         Player currentPlayer = isPlayerOneTurn ? bluePlayer : redPlayer;
-        
-        // Only process click if it's a human player's turn
+    
+        if (currentPlayer.isComputer()) {
+            System.out.println("Computer's turn: " + (isPlayerOneTurn ? "Blue" : "Red"));
+    
+            int delay = 500; // Delay in milliseconds
+            javax.swing.Timer timer = new javax.swing.Timer(delay, e -> {
+                if (gameOver) {
+                    System.out.println("Game is over. Timer is stopping the computer move.");
+                    return; // Prevent move if game has ended in the meantime
+                }
+    
+                int[] move = currentPlayer.getComputerMove(gameBoard);
+    
+                if (move == null) {
+                    System.out.println("No available moves for the computer.");
+                    return;
+                }
+    
+                char symbol = currentPlayer.getComputerSymbol(gameBoard, move[0], move[1]);
+                char player = isPlayerOneTurn ? 'B' : 'R';
+    
+                System.out.println("Computer (" + (isPlayerOneTurn ? "Blue" : "Red") + ") is making a move at (" 
+                                   + move[0] + ", " + move[1] + ") with letter: " + symbol);
+                
+                if (gameController.makeMove(move[0], move[1], symbol, player)) {
+                    Component[] components = boardPanel.getComponents();
+                    JLabel cell = (JLabel) components[move[0] * gameBoard.getSize() + move[1]];
+                    cell.setText(String.valueOf(symbol));
+                    cell.setForeground(isPlayerOneTurn ? Color.BLUE : Color.RED);
+    
+                    if (currentGameMode.checkGameOver(move[0], move[1])) {
+                        String winner = currentGameMode.getWinner();
+                        System.out.println("Game Over! Winner: " + winner);
+                        JOptionPane.showMessageDialog(frame, winner);
+    
+                        gameOver = true; // Set gameOver to true to stop further moves
+                    } else {
+                        System.out.println("Next turn will be: " + (gameController.isPlayerOneTurn() ? "Blue" : "Red"));
+                        updateTurnDisplay();
+                    }
+                } else {
+                    System.out.println("Computer move failed at (" + move[0] + ", " + move[1] + ")");
+                }
+            });
+    
+            timer.setRepeats(false); // Only run once
+            timer.start(); // Start the timer
+        }
+    }
+    
+    
+    
+    
+   
+    private void handleMove(int row, int col, JLabel cell) {
+        if (gameOver) {
+            System.out.println("Game is over. No more moves allowed.");
+            return; // Stop if game has ended
+        }
+    
+        boolean isPlayerOneTurn = gameController.isPlayerOneTurn();
+        Player currentPlayer = isPlayerOneTurn ? bluePlayer : redPlayer;
+    
+        System.out.println("Current turn: " + (isPlayerOneTurn ? "Blue (Player 1)" : "Red (Player 2)"));
+    
         if (!currentPlayer.isComputer()) {
             char letter = isPlayerOneTurn ? getchoicePlayer1() : getchoicePlayer2();
             char player = isPlayerOneTurn ? 'B' : 'R';
     
+            System.out.println("Human player (" + (isPlayerOneTurn ? "Blue" : "Red") + ") chose letter: " + letter);
+            
             if (gameController.makeMove(row, col, letter, player)) {
                 cell.setText(String.valueOf(letter));
                 cell.setForeground(isPlayerOneTurn ? Color.BLUE : Color.RED);
     
                 if (currentGameMode.checkGameOver(row, col)) {
                     String winner = currentGameMode.getWinner();
+                    System.out.println("Game Over! Winner: " + winner);
                     JOptionPane.showMessageDialog(frame, winner);
-                    updateGameMode(8, "Simple Game");
-                    simpleGameButton.setSelected(true);
+    
+                    gameOver = true; // Set gameOver to true to stop further moves
                 } else {
-                    // After human move, check if next player is computer
+                    System.out.println("Next turn will be: " + (gameController.isPlayerOneTurn() ? "Blue" : "Red"));
                     handleComputerTurn();
                     updateTurnDisplay(); 
                 }
+            } else {
+                System.out.println("Move invalid or failed to process.");
             }
         }
     }
+    
+    
     
     private char getchoicePlayer1() {
          if (sButton.isSelected()) {
