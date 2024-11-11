@@ -328,6 +328,7 @@ public class UI {
                     } else {
                         System.out.println("Next turn will be: " + (gameController.isPlayerOneTurn() ? "Blue" : "Red"));
                         updateTurnDisplay();
+                        
                     }
                 } else {
                     System.out.println("Computer move failed at (" + move[0] + ", " + move[1] + ")");
@@ -438,6 +439,58 @@ public class UI {
     public JRadioButton getOButton2() {
         return oButton2;
     }
+
+        // Add these to your UI class with the other getters
+    public JRadioButton getBlueHuman() {
+    return blueHuman;
+    }
+
+    public JRadioButton getBlueComputer() {
+    return blueComputer;
+    }
+
+    public JRadioButton getRedHuman() {
+    return redHuman;
+    }
+
+    public JRadioButton getRedComputer() {
+    return redComputer;
+    }
+
+    public JLabel getTurnDisplay() {
+    return turnDisplay;
+    }
+
+    public Player getBluePlayer() {
+    return bluePlayer;
+    }
+
+    public Player getRedPlayer() {
+    return redPlayer;
+    }
+
+    public boolean isGameOver() {
+    return gameOver;
+    }
+
+
+    public JPanel getBoardPanel() {
+    return boardPanel;
+    }
+
+    public GameMode getCurrentGameMode() {
+    return currentGameMode;
+    }
+
+    public JPanel getGameModePanel() {
+    return gameModePanel;
+    }
+
+    public JFrame getFrame() {
+    return frame;
+    }
+
+    
 
 
 }

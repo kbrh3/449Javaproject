@@ -118,18 +118,31 @@ public class Player {
 //GPT helped me with the logic for this one
 //public for tests
 public boolean couldCompleteSOS(GameBoard board, int row, int col, char letter, char player) {
+    System.out.println("\n=== Starting SOS check ===");
+    System.out.println("Checking letter: " + letter + " for player: " + player + " at position (" + row + "," + col + ")");
+
     if (letter == 'S') {
         // Existing 'S' SOS detection logic
         // ... (no changes needed here)
     } else if (letter == 'O') {
-        // Debug: Starting check for 'O' SOS
-        System.out.println("Checking SOS completion for 'O' at (" + row + ", " + col + ")");
+        System.out.println("Checking 'O' placement...");
 
         int[][] positions = {
-            {-1, 0, 1, 0},   // vertical
-            {0, -1, 0, 1},   // horizontal
-            {-1, -1, 1, 1},  // diagonal \
-            {-1, 1, 1, -1}   // diagonal /
+            // Vertical positions (↑↓)
+            {-1, 0, 1, 0},   // down
+            {1, 0, -1, 0},   // up
+            
+            // Horizontal positions (←→)
+            {0, -1, 0, 1},   // right
+            {0, 1, 0, -1},   // left
+            
+            // Diagonal positions (\)
+            {-1, -1, 1, 1},  // down-right
+            {1, 1, -1, -1},  // up-left
+            
+            // Diagonal positions (/)
+            {-1, 1, 1, -1},  // down-left
+            {1, -1, -1, 1}   // up-right
         };
 
         for (int[] pos : positions) {
@@ -138,30 +151,37 @@ public boolean couldCompleteSOS(GameBoard board, int row, int col, char letter, 
             int r2 = row + pos[2];
             int c2 = col + pos[3];
 
-            // Debug: Print values of neighboring cells
-            System.out.println("Checking positions (" + r1 + ", " + c1 + ") and (" + r2 + ", " + c2 + ")");
+            System.out.println("\nChecking direction: " + 
+                             (pos[0] == 0 ? "horizontal" : 
+                              pos[0] == pos[2] ? "diagonal" : "vertical"));
+            
             if (isValidPosition(board, r1, c1) && isValidPosition(board, r2, c2)) {
                 char value1 = board.getValueAt(r1, c1);
                 char value2 = board.getValueAt(r2, c2);
                 char player1 = board.checkplayer(r1, c1);
                 char player2 = board.checkplayer(r2, c2);
 
-                // Debug: Output values of surrounding cells
-                System.out.println("Values: " + value1 + " at (" + r1 + ", " + c1 + "), " +
-                                   value2 + " at (" + r2 + ", " + c2 + ")");
-                System.out.println("Players: " + player1 + " at (" + r1 + ", " + c1 + "), " +
-                                   player2 + " at (" + r2 + ", " + c2 + ")");
+                System.out.println("Position 1 (" + r1 + "," + c1 + "): Value=" + value1 + ", Player=" + player1);
+                System.out.println("Position 2 (" + r2 + "," + c2 + "): Value=" + value2 + ", Player=" + player2);
 
-                if (value1 == 'S' && value2 == 'S' &&
-                    player1 == player && player2 == player) {
+                boolean hasValidS1 = value1 == 'S' && player1 == player;
+                boolean hasValidS2 = value2 == 'S' && player2 == player;
+                
+                System.out.println("Valid S at pos1: " + hasValidS1);
+                System.out.println("Valid S at pos2: " + hasValidS2);
+
+                if (hasValidS1 && hasValidS2) {
+                    System.out.println("=== Found valid SOS! ===");
                     return true;
                 }
+            } else {
+                System.out.println("Positions out of bounds - skipping");
             }
         }
+        System.out.println("=== No valid SOS found ===");
     }
     return false;
-}
-
+    }
 
 
     private boolean isValidPosition(GameBoard board, int row, int col) {
