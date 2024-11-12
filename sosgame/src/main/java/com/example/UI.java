@@ -130,6 +130,11 @@ public class UI {
         frame.repaint();
     
         gameOver = false; // Reset gameOver for a new game
+        
+        // Add this: Check if computer should make first move
+        if (bluePlayer.isComputer() && gameController.isPlayerOneTurn()) {
+            handleComputerTurn();
+        }
     }
     
     
@@ -170,6 +175,10 @@ public class UI {
             bluePlayer.setIsComputer(true);   //computer mode
             sButton.setEnabled(false);      
             oButton.setEnabled(false);
+            //check if it's blue's turn and should move now
+            if (gameController.isPlayerOneTurn() && !gameOver) {
+                handleComputerTurn();
+            }
         });
 
         JPanel choicePanel = new JPanel();
@@ -225,9 +234,12 @@ public class UI {
     
         redComputer.addActionListener(e -> {
             redPlayer.setIsComputer(true);
-            //Disable buttons
             sButton2.setEnabled(false);
             oButton2.setEnabled(false);
+            //check if it's red's turn and should move now
+            if (!gameController.isPlayerOneTurn() && !gameOver) {
+                handleComputerTurn();
+            }
         });
     
         JPanel choicePanel = new JPanel();
@@ -284,7 +296,7 @@ public class UI {
     private void handleComputerTurn() {
         if (gameOver) {
             System.out.println("Game is over. No more moves allowed for the computer.");
-            return; // Stop if the game has ended
+            return;
         }
     
         boolean isPlayerOneTurn = gameController.isPlayerOneTurn();
@@ -293,17 +305,17 @@ public class UI {
         if (currentPlayer.isComputer()) {
             System.out.println("Computer's turn: " + (isPlayerOneTurn ? "Blue" : "Red"));
     
-            int delay = 500; // Delay in milliseconds
-            javax.swing.Timer timer = new javax.swing.Timer(delay, e -> {
+            javax.swing.Timer timer = new javax.swing.Timer(500, e -> {
                 if (gameOver) {
                     System.out.println("Game is over. Timer is stopping the computer move.");
-                    return; // Prevent move if game has ended in the meantime
+                    return;
                 }
     
                 int[] move = currentPlayer.getComputerMove(gameBoard);
     
                 if (move == null) {
                     System.out.println("No available moves for the computer.");
+                    gameOver = true;  // End game if no moves available
                     return;
                 }
     
@@ -314,6 +326,7 @@ public class UI {
                                    + move[0] + ", " + move[1] + ") with letter: " + symbol);
                 
                 if (gameController.makeMove(move[0], move[1], symbol, player)) {
+                    // Move succeeded
                     Component[] components = boardPanel.getComponents();
                     JLabel cell = (JLabel) components[move[0] * gameBoard.getSize() + move[1]];
                     cell.setText(String.valueOf(symbol));
@@ -323,23 +336,33 @@ public class UI {
                         String winner = currentGameMode.getWinner();
                         System.out.println("Game Over! Winner: " + winner);
                         JOptionPane.showMessageDialog(frame, winner);
-    
-                        gameOver = true; // Set gameOver to true to stop further moves
+                        gameOver = true;
                     } else {
                         System.out.println("Next turn will be: " + (gameController.isPlayerOneTurn() ? "Blue" : "Red"));
                         updateTurnDisplay();
                         
+                        // Only trigger next computer turn if move was successful
+                        Player nextPlayer = gameController.isPlayerOneTurn() ? bluePlayer : redPlayer;
+                        if (nextPlayer.isComputer() && !gameOver) {
+                            // Add delay before next computer move
+                            javax.swing.Timer nextMoveTimer = new javax.swing.Timer(500, nextMove -> {
+                                handleComputerTurn();
+                            });
+                            nextMoveTimer.setRepeats(false);
+                            nextMoveTimer.start();
+                        }
                     }
                 } else {
                     System.out.println("Computer move failed at (" + move[0] + ", " + move[1] + ")");
+                    gameOver = true;  // End game if move fails
+                    JOptionPane.showMessageDialog(frame, "Game ended - Invalid move");
                 }
             });
     
-            timer.setRepeats(false); // Only run once
-            timer.start(); // Start the timer
+            timer.setRepeats(false);
+            timer.start();
         }
     }
-    
     
     
     
@@ -347,7 +370,7 @@ public class UI {
     private void handleMove(int row, int col, JLabel cell) {
         if (gameOver) {
             System.out.println("Game is over. No more moves allowed.");
-            return; // Stop if game has ended
+            return; 
         }
     
         boolean isPlayerOneTurn = gameController.isPlayerOneTurn();
@@ -489,8 +512,4 @@ public class UI {
     public JFrame getFrame() {
     return frame;
     }
-
-    
-
-
 }

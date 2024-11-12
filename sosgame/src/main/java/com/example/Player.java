@@ -31,31 +31,43 @@ public class Player {
     
     //find best move for the computer player
     public int[] getComputerMove(GameBoard board) {
-        if (!isComputer) {
-            return null;
-        }
+        if (!isComputer) return null;
         
-        //try and complete sos
-        int[] winningMove = findWinningMove(board);
-        if (winningMove != null) {
-            return winningMove;
+        System.out.println("Computer is making a move");
+    
+        // Find winning move
+        int[] move = findWinningMove(board);
+        if (move != null && board.isEmpty(move[0], move[1])) {
+            System.out.println("Computer chose a winning move at " + move[0] + ", " + move[1]);
+            return move;
         }
-
-        // try to block sos?? - may not be workign right
-        int[] blockingMove = blockMove(board);
-        if (blockingMove != null) {
-            return blockingMove;
+    
+        // Find blocking move
+        move = blockMove(board);
+        if (move != null && board.isEmpty(move[0], move[1])) {
+            System.out.println("Computer chose a blocking move at " + move[0] + ", " + move[1]);
+            return move;
         }
-
-        //set up future sos if others arent found
-        int[] strategicMove = findSetupMove(board);
-        if (strategicMove != null) {
-            return strategicMove;
+    
+        // Find setup move
+        move = findSetupMove(board);
+        if (move != null && board.isEmpty(move[0], move[1])) {
+            System.out.println("Computer chose a setup move at " + move[0] + ", " + move[1]);
+            return move;
         }
-        
-        //last choice: make random move
-        return makeRandMove(board);
+    
+        // Random move if no other move is available
+        move = makeRandMove(board);
+        if (move != null && board.isEmpty(move[0], move[1])) {
+            System.out.println("Computer chose a random move at " + move[0] + ", " + move[1]);
+            return move;
+        }
+    
+        System.out.println("No valid moves found for computer");
+        return null;
     }
+    
+
 //gpt helped with the logic in this function
     private int[] findSetupMove(GameBoard board) {
         //look for adjacents to o
@@ -190,10 +202,7 @@ public boolean couldCompleteSOS(GameBoard board, int row, int col, char letter, 
 
     //random move in empty cell
     public int[] makeRandMove(GameBoard board) {
-        if (!isComputer) {
-            return null;
-        }
-        
+        System.out.println("Computer choosing random move");
         List<int[]> emptyCells = new ArrayList<>();
         for (int i = 0; i < board.getSize(); i++) {
             for (int j = 0; j < board.getSize(); j++) {
@@ -204,13 +213,15 @@ public boolean couldCompleteSOS(GameBoard board, int row, int col, char letter, 
         }
         
         if (!emptyCells.isEmpty()) {
-            return emptyCells.get(random.nextInt(emptyCells.size()));
+            int[] move = emptyCells.get(random.nextInt(emptyCells.size()));
+            System.out.println("Randomly selected move at (" + move[0] + ", " + move[1] + ")");
+            return move;
         }
         
+        System.out.println("No empty cells found for random move");
         return null;
     }
-    
-    //get which symbol it should play
+
     public char getComputerSymbol(GameBoard board, int row, int col) {
         if (!isComputer) {
             return 'S';
@@ -222,4 +233,6 @@ public boolean couldCompleteSOS(GameBoard board, int row, int col, char letter, 
         }
         return random.nextDouble() < 0.6 ? 'S' : 'O';
     }
+    
+    
 }

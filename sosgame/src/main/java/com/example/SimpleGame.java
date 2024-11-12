@@ -18,39 +18,41 @@ public class SimpleGame implements GameMode {
         this.gameBoard = new GameBoard(size);
         this.size = size;
     }
-
     @Override
     public boolean makeMove(int row, int col, char letter, char player) {
-        if (!isValidMove(row, col)) {
-            return false;
-        }
-        
-        //player turn setting based on color
-        if (player == 'B') {
-            isPlayerOneTurn = true;
-        } else if (player == 'R') {
-            isPlayerOneTurn = false;
-        }
-    
-        if (gameBoard.setMove(row, col, letter, player)) {
-            if (letter == 'S') {
-                sosFormed = isValidSOS(row, col, player);
-            } 
-            else if (letter == 'O') {
-                sosFormed = checkOPlacement(row, col, player);  // Pass player here
-            }
-    
-            if (sosFormed) {
-                winningPlayer = player;
-                gameBoard = new GameBoard(size);
-            } else {
-                togglePlayerTurn();
-            }
-            return true;
-        }
+    if (!isValidMove(row, col)) {
+        System.out.println("Invalid move in GameMode: cell is out of bounds or occupied at (" + row + ", " + col + ")");
         return false;
     }
+    
+    System.out.println("Placing letter '" + letter + "' for player " + player + " at (" + row + ", " + col + ")");
+    boolean moveMade = gameBoard.setMove(row, col, letter, player);
+    
+    if (moveMade) {
+        if (letter == 'S') {
+            sosFormed = isValidSOS(row, col, player);
+            System.out.println("SOS detected after placing 'S': " + sosFormed);
+        } else if (letter == 'O') {
+            sosFormed = checkOPlacement(row, col, player);
+            System.out.println("SOS detected after placing 'O': " + sosFormed);
+        }
+        
+        if (sosFormed) {
+            System.out.println("Game over, player " + player + " formed an SOS at (" + row + ", " + col + ")");
+            winningPlayer = player;
+        } else {
+            togglePlayerTurn();
+            System.out.println("Turn toggled. Next player is " + (isPlayerOneTurn ? "Player 1 (Blue)" : "Player 2 (Red)"));
+        }
+        return true;
+    } else {
+        System.out.println("Failed to place letter at (" + row + ", " + col + ")");
+        return false;
+    }
+    }
 
+
+    
     private boolean isValidMove(int row, int col) {
         //check if move is within board and space is empty
         return row >= 0 && row < gameBoard.getSize() && 

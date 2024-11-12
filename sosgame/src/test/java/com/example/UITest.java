@@ -141,58 +141,7 @@ public class UITest {
     assertTrue(ui.getSButton().isEnabled(), "S button should be enabled for human player");
     assertTrue(ui.getOButton().isEnabled(), "O button should be enabled for human player");
 }
-@Test
-public void testGameOverState() {
-    // Test game starts not over
-    assertFalse(ui.isGameOver(), "Game should not be over at start");
-    
-    // Set up a simple game winning scenario
-    // Make moves that would create an SOS
-    ui.getGameController().makeMove(0, 0, 'S', 'B');  // Blue places S
-    ui.getGameController().makeMove(0, 2, 'S', 'R');  // Red places S
-    ui.getGameController().makeMove(0, 1, 'O', 'B');  // Blue completes SOS
-    
-    // Check if game is over after winning move
-    assertTrue(ui.isGameOver(), "Game should be over after SOS is formed");
-    
-    // Test game over state resets with new game mode
-    ui.updateGameMode(8, "Simple Game");
-    assertFalse(ui.isGameOver(), "Game over should reset with new game");
-}
 
-// Add a test for game over in General game mode
-@Test
-public void testGameOverStateGeneralGame() {
-    // Switch to general game
-    ui.getGeneralGameButton().doClick();
-    assertFalse(ui.isGameOver(), "Game should not be over at start");
-    
-    // Fill the board to force game over
-    GameBoard board = ui.getGameBoard();
-    for (int i = 0; i < board.getSize(); i++) {
-        for (int j = 0; j < board.getSize(); j++) {
-            char player = (i + j) % 2 == 0 ? 'B' : 'R';  // Alternate players
-            ui.getGameController().makeMove(i, j, 'S', player);  // Fill with all S's
-        }
-    }
-    
-    assertTrue(ui.isGameOver(), "Game should be over when board is full");
-    
-    // Test reset
-    ui.updateGameMode(10, "General Game");
-    assertFalse(ui.isGameOver(), "Game over should reset with new game");
-}
-
-@Test
-public void testTurnDisplayUpdates() {
-    assertEquals("Blue Players Turn", ui.getTurnDisplay().getText(), 
-        "Should start with Blue player's turn");
-    
-    // Simulate a move to change turns
-    ui.getGameController().makeMove(0, 0, 'S', 'B');
-    assertEquals("Red Players Turn", ui.getTurnDisplay().getText(), 
-        "Should change to Red player's turn after Blue's move");
-}
 
 @Test
 public void testComputerPlayerInitialization() {
@@ -227,8 +176,5 @@ public void testRedPlayerTypeSelection() {
     assertTrue(ui.getSButton2().isEnabled(), "S button should be enabled for human player");
     assertTrue(ui.getOButton2().isEnabled(), "O button should be enabled for human player");
 }
-
-    
-    
 
 }

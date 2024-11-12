@@ -31,9 +31,18 @@ public GameMode getGameMode(){
     return this.currentGameMode;
 }
     
-    //logic here is a bit off, make sure this isn't causing problems
-public boolean makeMove(int row, int col, char choice, char player) {
-        return currentGameMode.makeMove(row, col, choice, player);  
+    //updated logic 11/11/24
+    public boolean makeMove(int row, int col, char choice, char player) {
+        System.out.println("Player " + player + " attempting to place '" + choice + "' at (" + row + ", " + col + ")");
+        if (!gameBoard.isEmpty(row, col)) {
+            System.out.println("Invalid move: Cell (" + row + ", " + col + ") is already occupied.");
+            return false;
+        }
+        boolean result = currentGameMode.makeMove(row, col, choice, player);
+        System.out.println("Move result for (" + row + ", " + col + "): " + result);
+        return result;
     }
+    
+    
 
 }

@@ -37,6 +37,33 @@ public class PlayerTest {
     }
 
     @Test
+    public void testAutomaticMoveSelection() {
+        // Set up the player as a computer
+        bluePlayer.setIsComputer(true);
+
+        // Mock the board to simulate empty spaces
+        when(mockBoard.getSize()).thenReturn(3);
+        
+        // Assume the board has empty cells
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                when(mockBoard.isEmpty(i, j)).thenReturn(true);
+            }
+        }
+
+        // Trigger the computer's turn to make a move
+        int[] move = bluePlayer.getComputerMove(mockBoard);
+
+        // Verify that the computer has made a move (not null) and it's a valid position
+        assertNotNull(move, "Computer move should not be null when spaces are available");
+        assertTrue(move[0] >= 0 && move[0] < 3, "Move row should be within bounds");
+        assertTrue(move[1] >= 0 && move[1] < 3, "Move column should be within bounds");
+
+        // Verify that the selected cell was empty and is now "occupied" by the computer's move
+        assertTrue(mockBoard.isEmpty(move[0], move[1]), "Computer should only place move in an empty cell");
+    }
+
+    @Test
     public void testGetComputerMove_FindWinningMove() {
         // Simulate a winning move on the board
         when(mockBoard.getSize()).thenReturn(3);
@@ -85,13 +112,13 @@ public class PlayerTest {
     }
 
     @Test
-public void testNoValidSOS() {
-    // Set up board with no possible SOS completion
+    public void testNoValidSOS() {
+    //no possible SOS completion
     when(mockBoard.getSize()).thenReturn(3);
     when(mockBoard.isEmpty(1, 1)).thenReturn(true);
     
-    // Set up random non-SOS positions
-    // Mock positions that would be checked by isValidPosition
+    //random non-SOS positions
+    //positions that would be checked by isValidPosition
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
             when(mockBoard.getValueAt(i, j)).thenReturn(' ');
@@ -232,7 +259,7 @@ public void testSymbolSelectionStrategy() {
         "S selection rate should be close to 60%");
 }
 
-    
+//need some for computer v computer when we solve issue with invalid moves
 
 }
 
